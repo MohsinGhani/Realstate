@@ -1,5 +1,6 @@
 "use client";
 
+import { ConfigProvider } from "antd";
 import "./globals.scss";
 
 export default function RootLayout({
@@ -9,7 +10,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "#F9C70C",
+          },
+        }}
+      >
+        <body>{children}</body>
+      </ConfigProvider>
     </html>
   );
 }

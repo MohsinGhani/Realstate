@@ -1,29 +1,36 @@
 "use client";
 import React, { useState } from "react";
 import { Button, message, Steps, theme } from "antd";
-import Login from "./Login";
+import Login from "./AddressBar";
+import QrCode from "./QrCode";
+import OwnerDetails from "./OwnerDetails";
+import Confirmation from "./Confirmation";
+import { useRouter } from "next/navigation";
+
+// import { useRouter } from "next/router";
 
 const steps = [
   {
-    title: "First",
+    title: "Address",
     content: <Login />,
   },
   {
-    title: "Second",
-    content: "Second-content",
+    title: "QR code",
+    content: <QrCode />,
   },
   {
-    title: "third",
-    content: "Last-content",
+    title: "Owner  Details ",
+    content: <OwnerDetails />,
   },
   {
-    title: "Last",
-    content: "<login>",
+    title: "Confirmation",
+    content: <Confirmation />,
   },
 ];
 const Companies = () => {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
+  const router = useRouter();
 
   const next = () => {
     setCurrent(current + 1);
@@ -39,34 +46,53 @@ const Companies = () => {
     lineHeight: "260px",
     textAlign: "center",
     color: token.colorTextTertiary,
-    backgroundColor: token.colorFillAlter,
+
     borderRadius: token.borderRadiusLG,
-    border: `1px dashed ${token.colorBorder}`,
+
     marginTop: 16,
   };
-
   return (
-    <div className="bg-slate-100">
-      <div className="w-2/5 m-auto">
-        <Steps current={current} items={items} />
-        <div style={contentStyle}>{steps[current].content}</div>
-        <div style={{ marginTop: 24 }}>
+    <div>
+      <div className="w-2/6 m-auto mt-10 ">
+        <Steps
+          className="w-10/6 "
+          current={current}
+          items={items}
+          labelPlacement="vertical"
+        />
+        <div
+          style={{
+            height: "500px",
+            marginTop: "100px",
+          }}
+        >
+          {steps[current].content}{" "}
+        </div>
+        <div className="flex justify-end  mr-3">
           {current < steps.length - 1 && (
-            <Button type="primary" onClick={() => next()}>
+            <Button
+              type="dashed"
+              className="bg-yellow-400"
+              onClick={() => next()}
+            >
               Next
             </Button>
           )}
           {current === steps.length - 1 && (
             <Button
               type="primary"
-              onClick={() => message.success("Processing complete!")}
+              onClick={() => {
+                // if (current !== 3) {
+                router.push("/landingPage");
+                // }
+              }}
             >
-              Done
+              {current !== 3 ? "Done" : "Confirm"}
             </Button>
           )}
           {current > 0 && (
             <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
-              Previous
+              {current !== 3 ? "Previous" : "Resend"}
             </Button>
           )}
         </div>

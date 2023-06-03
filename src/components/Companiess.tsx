@@ -69,18 +69,10 @@ const Companies = () => {
           {steps[current].content}{" "}
         </div>
         <div className="flex justify-end  mr-3">
-          {current < steps.length - 1 && (
-            <Button
-              type="dashed"
-              className="bg-yellow-400"
-              onClick={() => next()}
-            >
-              Next
-            </Button>
-          )}
           {current === steps.length - 1 && (
             <Button
-              type="primary"
+              // type="dashed"
+              className="bg-yellow-400"
               onClick={() => {
                 // if (current !== 3) {
                 router.push("/landingPage");
@@ -90,9 +82,23 @@ const Companies = () => {
               {current !== 3 ? "Done" : "Confirm"}
             </Button>
           )}
+
           {current > 0 && (
-            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+            <Button
+              className="bg-yellow-400 text-black"
+              style={{ margin: "0 8px" }}
+              onClick={() => prev()}
+            >
               {current !== 3 ? "Previous" : "Resend"}
+            </Button>
+          )}
+          {current < steps.length - 1 && (
+            <Button
+              // type="dashed"
+              className="bg-yellow-400 text-black"
+              onClick={() => next()}
+            >
+              Next
             </Button>
           )}
         </div>

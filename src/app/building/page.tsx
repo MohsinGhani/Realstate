@@ -1,6 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import { Table, Button, Modal, Typography, message, Popconfirm } from "antd";
+import {
+  Table,
+  Button,
+  Modal,
+  Typography,
+  message,
+  Popconfirm,
+  Input,
+} from "antd";
 
 const initialData = [
   {
@@ -31,7 +39,6 @@ const TableComponent: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const confirm = (record: any) => {
-    console.log("🚀  record:", record);
     deleteItem(record);
     message.success("Click on Yes");
   };
@@ -49,10 +56,7 @@ const TableComponent: React.FC = () => {
       key: "action",
       render: (_: any, record: any) => (
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            className="bg-yellow-400 border-none text-black mr-1"
-            onClick={() => editItem(record)}
-          >
+          <Button className="text-black mr-1" onClick={() => editItem(record)}>
             Edit
           </Button>
 
@@ -64,9 +68,7 @@ const TableComponent: React.FC = () => {
             okText="Yes"
             cancelText="No"
           >
-            <Button className="bg-red-900 text-white" href="#">
-              Delete
-            </Button>
+            <Button danger>Delete</Button>
           </Popconfirm>
         </div>
       ),
@@ -115,67 +117,25 @@ const TableComponent: React.FC = () => {
     <div>
       <div className="flex text-black w-3/4 justify-end items-end mt-40">
         <Button
-          className="bg-yellow-400 border-none text-black w-100 h-30 rounded-md text-center"
+          className="text-black w-100 h-30 rounded-md text-center"
           onClick={handleAddModalOpen}
         >
           ADD
         </Button>
 
-        <Modal
-          open={isAddModalVisible}
-          onCancel={handleAddModalClose}
-          footer={null}
-        >
-          <form
-            className="flex justify-center flex-col"
-
-            // onSubmit={handleSubmit}
-          >
-            <Typography className="fw-800 text-2xl">Add House Level</Typography>
-            <div className="flex w-full">
-              <input
-                className="w-full h-6 mb-4 mt-5  border-2 rounded-md px-1.5   pb-px"
-                type="text"
-                name="name"
-                // value={formData.name || ""}
-                // onChange={handleChange}
-                placeholder=" Add House Level"
-              />
-            </div>
-
-            <div className="flex  justify-end  bg-maroon-800">
-              <button
-                className="bg-red-900  text-slate-50 border-none w-1/5 rounded-md h-8 mr-2"
-                onClick={handleAddModalClose}
-                type="submit"
-              >
-                Close
-              </button>
-              <button
-                className="bg-yellow-400 border-none text-slate-950 w-1/5 rounded-md h-8 "
-                type="submit"
-              >
-                Save
-              </button>
-            </div>
-          </form>
+        <Modal open={isAddModalVisible} onCancel={handleAddModalClose}>
+          <Typography className="fw-800 text-2xl">Add House Level</Typography>
+          <div className="flex w-full">
+            <Input type="text" name="name" placeholder=" Add House Level" />
+          </div>
         </Modal>
       </div>
-      <div className="mt-100 flex justify-center  flex-row mt-12">
-        <Table
-          className=""
-          style={{
-            width: "50%",
-          }}
-          dataSource={data}
-          columns={columns}
-          pagination={false}
-        />
+      <div className="">
+        <Table dataSource={data} columns={columns} />
         <Modal
           title={selectedItem ? "Edit Item" : "Add Item"}
           open={isModalVisible}
           onCancel={() => setIsModalVisible(false)}
-          footer={null}
         >
           <ItemForm item={selectedItem} onSave={handleSave} />
         </Modal>
@@ -198,22 +158,12 @@ const ItemForm: React.FC<any> = ({ item, onSave }) => {
   return (
     <form className="flex  justify-center flex-col" onSubmit={handleSubmit}>
       <div className="flex w-100%">
-        <input
-          className="w-full h-6 mb-4  border-2 rounded-md px-1.5   pb-px"
+        <Input
           type="text"
           name="name"
           value={formData.name || ""}
           onChange={handleChange}
         />
-      </div>
-
-      <div className="flex  justify-end">
-        <button
-          className="bg-yellow-400 border-none  text-slate-950  w-1/5 rounded-md h-8"
-          type="submit"
-        >
-          Save
-        </button>
       </div>
     </form>
   );

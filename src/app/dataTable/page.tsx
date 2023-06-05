@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Table, Button, Modal, Typography } from "antd";
+import { Table, Button, Modal, Typography, message, Popconfirm } from "antd";
 
 const initialData = [
   {
@@ -30,18 +30,18 @@ const TableComponent: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const confirm = (record: any) => {
+    console.log("🚀  record:", record);
+    deleteItem(record);
+    message.success("Click on Yes");
+  };
+  const cancel = () => {
+    message.error("Click on No");
+  };
+
   const columns = [
     {
-      title: (
-        <span
-          style={{
-            fontWeight: "800",
-            fontSize: "18px",
-          }}
-        >
-          House Levels
-        </span>
-      ),
+      title: <span className="font-extrabold text-18">House Levels</span>,
       dataIndex: "name",
       key: "name",
     },
@@ -50,26 +50,24 @@ const TableComponent: React.FC = () => {
       render: (_: any, record: any) => (
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
           <Button
-            style={{
-              backgroundColor: "#F9C70C",
-              border: "none",
-              color: "black",
-              marginRight: "5px",
-            }}
+            className="bg-yellow-400 border-none text-black mr-1"
             onClick={() => editItem(record)}
           >
             Edit
           </Button>
-          <Button
-            style={{
-              backgroundColor: "#800000",
-              border: "none",
-              color: "white",
-            }}
-            onClick={() => deleteItem(record)}
+
+          <Popconfirm
+            className="text-black"
+            title="Are you sure to delete this task?"
+            onConfirm={() => confirm(record)}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
           >
-            Delete
-          </Button>
+            <Button className="bg-red-900 text-white" href="#">
+              Delete
+            </Button>
+          </Popconfirm>
         </div>
       ),
     },
@@ -115,14 +113,55 @@ const TableComponent: React.FC = () => {
 
   return (
     <div>
-      <div
-        style={{
-          marginTop: "100px",
-          display: "flex",
-          justifyContent: "center",
-          flexDirection: "row",
-        }}
-      >
+      <div className="flex text-black w-3/4 justify-end items-end mt-40">
+        <Button
+          className="bg-yellow-400 border-none text-black w-100 h-30 rounded-md text-center"
+          onClick={handleAddModalOpen}
+        >
+          ADD
+        </Button>
+
+        <Modal
+          open={isAddModalVisible}
+          onCancel={handleAddModalClose}
+          footer={null}
+        >
+          <form
+            className="flex justify-center flex-col"
+
+            // onSubmit={handleSubmit}
+          >
+            <Typography className="fw-800 text-2xl">Add House Level</Typography>
+            <div className="flex w-full">
+              <input
+                className="w-full h-6 mb-4 mt-5  border-2 rounded-md px-1.5   pb-px"
+                type="text"
+                name="name"
+                // value={formData.name || ""}
+                // onChange={handleChange}
+                placeholder=" Add House Level"
+              />
+            </div>
+
+            <div className="flex  justify-end  bg-maroon-800">
+              <button
+                className="bg-red-900  text-slate-50 border-none w-1/5 rounded-md h-8 mr-2"
+                onClick={handleAddModalClose}
+                type="submit"
+              >
+                Close
+              </button>
+              <button
+                className="bg-yellow-400 border-none text-slate-950 w-1/5 rounded-md h-8 "
+                type="submit"
+              >
+                Save
+              </button>
+            </div>
+          </form>
+        </Modal>
+      </div>
+      <div className="mt-100 flex justify-center  flex-row mt-12">
         <Table
           className=""
           style={{
@@ -141,94 +180,12 @@ const TableComponent: React.FC = () => {
           <ItemForm item={selectedItem} onSave={handleSave} />
         </Modal>
       </div>
-      <div
-        style={{
-          display: "flex",
-
-          color: "black",
-          width: "74.555%",
-          justifyContent: "flex-end",
-          alignItems: "flex-end",
-          marginTop: "40px",
-        }}
-      >
-        <Button
-          style={{
-            backgroundColor: "#F9C70C",
-            border: "none",
-            color: "black",
-            // marginRight: "5px",
-            width: "100px",
-            height: "30px",
-            borderRadius: "6px",
-            // fontWeight: "600",
-            textAlign: "center",
-          }}
-          onClick={handleAddModalOpen}
-        >
-          ADD
-        </Button>
-
-        <Modal
-          visible={isAddModalVisible}
-          onCancel={handleAddModalClose}
-          footer={null}
-        >
-          <form
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "column",
-            }}
-
-            // onSubmit={handleSubmit}
-          >
-            <Typography
-              className="fw-800 text-2xl"
-              // style={{
-              //   fontWeight: "800",
-              //   fontSize: "18px",
-              // }}
-            >
-              Add House Level
-            </Typography>
-            <div className="flex w-full">
-              <input
-                className="w-full h-6 mb-4 mt-5"
-                type="text"
-                name="name"
-                // value={formData.name || ""}
-                // onChange={handleChange}
-                placeholder=" Add House Level"
-              />
-            </div>
-
-            <div className="flex  justify-between bg-maroon-800">
-              <button
-                className="bg-red-900  text-slate-50 border-none   w-1/5 rounded-md  h-8 "
-                onClick={handleAddModalClose}
-                type="submit"
-              >
-                Close
-              </button>
-              <button
-                className="bg-yellow-400 border-none text-slate-950 w-1/5 rounded-md h-8 "
-                type="submit"
-              >
-                Save
-              </button>
-            </div>
-          </form>
-        </Modal>
-      </div>
     </div>
   );
 };
 
 const ItemForm: React.FC<any> = ({ item, onSave }) => {
   const [formData, setFormData] = useState(item || {});
-  console.log("🚀 ~ formData:", formData);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -242,7 +199,7 @@ const ItemForm: React.FC<any> = ({ item, onSave }) => {
     <form className="flex  justify-center flex-col" onSubmit={handleSubmit}>
       <div className="flex w-100%">
         <input
-          className="w-full h-6 mb-4"
+          className="w-full h-6 mb-4  border-2 rounded-md px-1.5   pb-px"
           type="text"
           name="name"
           value={formData.name || ""}
@@ -250,7 +207,7 @@ const ItemForm: React.FC<any> = ({ item, onSave }) => {
         />
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex  justify-end">
         <button
           className="bg-yellow-400 border-none  text-slate-950  w-1/5 rounded-md h-8"
           type="submit"

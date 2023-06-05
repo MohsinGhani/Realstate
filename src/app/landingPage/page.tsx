@@ -5,17 +5,9 @@ import { useRouter } from "next/navigation";
 const LandingPage = () => {
   const router = useRouter();
   return (
-    <div
-      style={{
-        display: "flex",
-        color: "black",
-        height: " 80vh",
-        width: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <div className="w-full flex  text-black justify-center items-center ">
       <div
+        className="flex  shadow-neutral-950"
         style={{
           display: "flex",
           boxShadow: "rgba(0, 0, 0, 0.1) 0px 4px 12px",

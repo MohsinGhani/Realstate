@@ -1,24 +1,16 @@
 "use client";
 
-import { ConfigProvider } from "antd";
 import "./globals.scss";
+import withTheme from "../../theme";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
+  return withTheme(
     <html lang="en">
-      <ConfigProvider
-        theme={{
-          token: {
-            colorPrimary: "#F9C70C",
-          },
-        }}
-      >
-        <body>{children}</body>
-      </ConfigProvider>
+      <body>{children}</body>
     </html>
   );
 }

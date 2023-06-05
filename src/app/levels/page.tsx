@@ -8,6 +8,7 @@ import {
   message,
   Popconfirm,
   Input,
+  Space,
 } from "antd";
 
 const initialData = [
@@ -46,7 +47,7 @@ const TableComponent: React.FC = () => {
     message.error("Click on No");
   };
 
-  const columns = [
+  const columns: any = [
     {
       title: <span className="font-extrabold text-18">House Levels</span>,
       dataIndex: "name",
@@ -54,9 +55,11 @@ const TableComponent: React.FC = () => {
     },
     {
       key: "action",
+      align: "right",
+
       render: (_: any, record: any) => (
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button className="text-black mr-1" onClick={() => editItem(record)}>
+        <Space>
+          <Button type="primary" onClick={() => editItem(record)}>
             Edit
           </Button>
 
@@ -70,7 +73,7 @@ const TableComponent: React.FC = () => {
           >
             <Button danger>Delete</Button>
           </Popconfirm>
-        </div>
+        </Space>
       ),
     },
   ];
@@ -103,8 +106,6 @@ const TableComponent: React.FC = () => {
   };
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
 
-  // Rest of the code...
-
   const handleAddModalOpen = () => {
     setIsAddModalVisible(true);
   };
@@ -115,31 +116,26 @@ const TableComponent: React.FC = () => {
 
   return (
     <div>
-      <div className="flex text-black w-3/4 justify-end items-end mt-40">
-        <Button
-          className="text-black w-100 h-30 rounded-md text-center"
-          onClick={handleAddModalOpen}
-        >
-          ADD
+      <div className="flex justify-end mb-4">
+        <Button type="primary" onClick={handleAddModalOpen}>
+          Add Level
         </Button>
+      </div>
 
-        <Modal open={isAddModalVisible} onCancel={handleAddModalClose}>
-          <Typography className="fw-800 text-2xl">Add House Level</Typography>
-          <div className="flex w-full">
-            <Input type="text" name="name" placeholder=" Add House Level" />
-          </div>
-        </Modal>
-      </div>
-      <div className="">
-        <Table dataSource={data} columns={columns} />
-        <Modal
-          title={selectedItem ? "Edit Item" : "Add Item"}
-          open={isModalVisible}
-          onCancel={() => setIsModalVisible(false)}
-        >
-          <ItemForm item={selectedItem} onSave={handleSave} />
-        </Modal>
-      </div>
+      <Table dataSource={data} columns={columns} />
+
+      <Modal open={isAddModalVisible} onCancel={handleAddModalClose}>
+        <Typography className="fw-800 text-2xl">Add House Level</Typography>
+        <Input type="text" name="name" placeholder=" Add House Level" />
+      </Modal>
+
+      <Modal
+        title={selectedItem ? "Edit Item" : "Add Item"}
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+      >
+        <ItemForm item={selectedItem} onSave={handleSave} />
+      </Modal>
     </div>
   );
 };

@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "antd";
 import React from "react";
 import { useRouter } from "next/navigation";
@@ -11,7 +12,7 @@ const LandingPage = () => {
       type="primary"
       className="flex"
       onClick={() => {
-        router.push("/dataTable");
+        router.push("/levels");
       }}
     >
       House Level

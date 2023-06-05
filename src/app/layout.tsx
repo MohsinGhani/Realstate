@@ -10,7 +10,9 @@ export default function RootLayout({
 }) {
   return withTheme(
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <div className="mainContainer">{children}</div>
+      </body>
     </html>
   );
 }

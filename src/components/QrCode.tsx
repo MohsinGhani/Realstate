@@ -10,7 +10,7 @@ const QrCode = () => {
       <div className="flex justify-center items-center mb-0">
         <img src="/assets/images/qrcode_example_1.png" />
       </div>
-      <Form className="w-11/12 ml-9 mt-10">
+      <Form className="mt-10">
         <Typography className="text-1xl   font-medium">Email</Typography>
         <Form.Item
           name="state"

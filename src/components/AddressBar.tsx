@@ -1,4 +1,4 @@
-import { Button, Form, Input } from "antd";
+import { Form, Input } from "antd";
 import Typography from "antd/es/typography/Typography";
 import React from "react";
 
@@ -10,7 +10,7 @@ const login = () => {
 
   return (
     <div>
-      <Form className="w-11/12 ml-9 " onFinish={onFinish}>
+      <Form onFinish={onFinish}>
         <Typography className="text-left text-2xl  mb-6 font-medium">
           Address
         </Typography>

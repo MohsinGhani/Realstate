@@ -41,40 +41,36 @@ const Companies = () => {
 
   return (
     <div>
-      <div className="w-2/6 m-auto mt-10 ">
-        <Steps
-          className="w-10/6 "
-          current={current}
-          items={items}
-          labelPlacement="vertical"
-        />
-        <div>{steps[current].content}</div>
+      <Steps current={current} items={items} labelPlacement="vertical" />
+      <br />
+      <br />
 
-        <div className="">
-          <Space>
-            {current === steps.length - 1 && (
-              <Button
-                type="primary"
-                onClick={() => {
-                  router.push("/landingPage");
-                }}
-              >
-                {current !== 3 ? "Done" : "Confirm"}
-              </Button>
-            )}
+      {steps[current].content}
 
-            {current > 0 && (
-              <Button onClick={() => prev()}>
-                {current !== 3 ? "Previous" : "Resend"}
-              </Button>
-            )}
-            {current < steps.length - 1 && (
-              <Button type="primary" onClick={() => next()}>
-                Next
-              </Button>
-            )}
-          </Space>
-        </div>
+      <div className="flex justify-end">
+        <Space>
+          {current === steps.length - 1 && (
+            <Button
+              type="primary"
+              onClick={() => {
+                router.push("/landingPage");
+              }}
+            >
+              {current !== 3 ? "Done" : "Confirm"}
+            </Button>
+          )}
+
+          {current > 0 && (
+            <Button onClick={() => prev()}>
+              {current !== 3 ? "Previous" : "Resend"}
+            </Button>
+          )}
+          {current < steps.length - 1 && (
+            <Button type="primary" onClick={() => next()}>
+              Next
+            </Button>
+          )}
+        </Space>
       </div>
     </div>
   );

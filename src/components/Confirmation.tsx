@@ -4,7 +4,7 @@ import React from "react";
 const Confirmation = () => {
   return (
     <div>
-      <Form className="w-11/12 ml-9">
+      <Form>
         <Typography className="text-left text-2xl  mb-2 font-medium">
           Confirmation Code
         </Typography>

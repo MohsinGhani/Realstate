@@ -5,33 +5,23 @@ import { Table, Button, Modal, Typography } from "antd";
 const initialData = [
   {
     id: 1,
-    name: "John Doe",
-    age: 25,
-    address: "123 Main Street",
+    name: "Floor 1",
   },
   {
     id: 2,
-    name: "Jane Smith",
-    age: 30,
-    address: "456 Park Avenue",
+    name: "Floor 2",
   },
   {
     id: 3,
-    name: "Jane Smith",
-    age: 30,
-    address: "456 Park Avenue",
+    name: "Floor 3 ",
   },
   {
     id: 4,
-    name: "Jane Smith",
-    age: 30,
-    address: "456 Park Avenue",
+    name: "Floor 4",
   },
   {
     id: 5,
-    name: "Jane Smith",
-    age: 30,
-    address: "456 Park Avenue",
+    name: "Floor 5",
   },
 ];
 
@@ -134,6 +124,7 @@ const TableComponent: React.FC = () => {
         }}
       >
         <Table
+          className=""
           style={{
             width: "50%",
           }}
@@ -143,7 +134,7 @@ const TableComponent: React.FC = () => {
         />
         <Modal
           title={selectedItem ? "Edit Item" : "Add Item"}
-          visible={isModalVisible}
+          open={isModalVisible}
           onCancel={() => setIsModalVisible(false)}
           footer={null}
         >
@@ -189,31 +180,21 @@ const TableComponent: React.FC = () => {
               justifyContent: "center",
               flexDirection: "column",
             }}
-            className="w-1/4"
+
             // onSubmit={handleSubmit}
           >
             <Typography
-              style={{
-                fontWeight: "800",
-                fontSize: "18px",
-              }}
+              className="fw-800 text-2xl"
+              // style={{
+              //   fontWeight: "800",
+              //   fontSize: "18px",
+              // }}
             >
               Add House Level
             </Typography>
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
-              }}
-              className="flex items-center"
-            >
+            <div className="flex w-full">
               <input
-                style={{
-                  width: "100%",
-                  height: "20px",
-                  marginBottom: "20px",
-                  marginTop: "50px",
-                }}
+                className="w-full h-6 mb-4 mt-5"
                 type="text"
                 name="name"
                 // value={formData.name || ""}
@@ -222,40 +203,17 @@ const TableComponent: React.FC = () => {
               />
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
+            <div className="flex  justify-between bg-maroon-800">
               <button
+                className="bg-red-900  text-slate-50 border-none   w-1/5 rounded-md  h-8 "
                 onClick={handleAddModalClose}
                 type="submit"
-                style={{
-                  backgroundColor: "#800000",
-                  border: "none",
-                  color: "white",
-                  // marginRight: "5px",
-                  width: "100px",
-                  height: "30px",
-                  borderRadius: "6px",
-                  textAlign: "center",
-                }}
               >
                 Close
               </button>
               <button
+                className="bg-yellow-400 border-none text-slate-950 w-1/5 rounded-md h-8 "
                 type="submit"
-                style={{
-                  backgroundColor: "#F9C70C",
-                  border: "none",
-                  color: "black",
-                  // marginRight: "5px",
-                  width: "100px",
-                  height: "30px",
-                  borderRadius: "6px",
-                  textAlign: "center",
-                }}
               >
                 Save
               </button>
@@ -267,7 +225,6 @@ const TableComponent: React.FC = () => {
   );
 };
 
-// Sample Add/Edit Form Component
 const ItemForm: React.FC<any> = ({ item, onSave }) => {
   const [formData, setFormData] = useState(item || {});
   console.log("🚀 ~ formData:", formData);
@@ -282,28 +239,10 @@ const ItemForm: React.FC<any> = ({ item, onSave }) => {
   };
 
   return (
-    <form
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        flexDirection: "column",
-      }}
-      className="w-1/4"
-      onSubmit={handleSubmit}
-    >
-      <div
-        style={{
-          display: "flex",
-          width: "100%",
-        }}
-        className="flex items-center"
-      >
+    <form className="flex  justify-center flex-col" onSubmit={handleSubmit}>
+      <div className="flex w-100%">
         <input
-          style={{
-            width: "100%",
-            height: "20px",
-            marginBottom: "20px",
-          }}
+          className="w-full h-6 mb-4"
           type="text"
           name="name"
           value={formData.name || ""}
@@ -311,24 +250,10 @@ const ItemForm: React.FC<any> = ({ item, onSave }) => {
         />
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
+      <div className="flex justify-center">
         <button
+          className="bg-yellow-400 border-none  text-slate-950  w-1/5 rounded-md h-8"
           type="submit"
-          style={{
-            backgroundColor: "#F9C70C",
-            border: "none",
-            color: "black",
-            // marginRight: "5px",
-            width: "100px",
-            height: "30px",
-            borderRadius: "6px",
-            textAlign: "center",
-          }}
         >
           Save
         </button>

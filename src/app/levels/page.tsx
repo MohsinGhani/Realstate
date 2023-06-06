@@ -35,7 +35,7 @@ const initialData = [
   },
 ];
 
-const TableComponent = () => {
+const LevelsPage = () => {
   const [data, setData] = useState(initialData);
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -176,4 +176,4 @@ const ItemForm: React.FC<any> = ({ item, onSave }) => {
   );
 };
 
-export default TableComponent;
+export default LevelsPage;

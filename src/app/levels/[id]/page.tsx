@@ -10,6 +10,7 @@ import {
   message,
   Popconfirm,
   Space,
+  Form,
 } from "antd";
 import AddRoom from "@/components/AddRoom";
 
@@ -36,9 +37,10 @@ const initialData = [
   },
 ];
 
-const TableComponent = () => {
+const LevelsPage2 = () => {
   const [data, setData] = useState(initialData);
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false); //false
+  const [form] = Form.useForm();
 
   const confirm = (record: any) => {
     deleteItem(record);
@@ -100,6 +102,13 @@ const TableComponent = () => {
     setIsAddModalVisible(false);
   };
 
+  const handleOnFinish = async () => {
+    try {
+      const value = await form.validateFields();
+      console.log("🚀  value:", value);
+    } catch (err) {}
+  };
+
   return (
     <div>
       <div className="flex justify-end mb-4">
@@ -110,13 +119,24 @@ const TableComponent = () => {
 
       <Table dataSource={data} columns={columns} />
 
-      <Modal open={isAddModalVisible} onCancel={handleAddModalClose}>
+      <Modal
+        open={isAddModalVisible}
+        className="top-[20px]"
+        footer={[
+          <Button key="cancel" onClick={handleAddModalClose}>
+            Cancel
+          </Button>,
+          <Button key="save" type="primary" onClick={handleOnFinish}>
+            Save
+          </Button>,
+        ]}
+      >
         <Typography className="fw-800 text-2xl">Room</Typography>
         <br />
-        <AddRoom />
+        <AddRoom form={form} />
       </Modal>
     </div>
   );
 };
 
-export default TableComponent;
+export default LevelsPage2;

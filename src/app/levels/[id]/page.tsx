@@ -16,22 +16,22 @@ import AddRoom from "@/components/AddRoom";
 
 const initialData = [
   {
-    id: 1,
+    key: 1,
     room: "Room 01",
     type: "Bed Room",
   },
   {
-    id: 2,
+    key: 2,
     room: "Room 02",
     type: "Bathroom",
   },
   {
-    id: 3,
+    key: 3,
     room: "Room 03 ",
     type: "Other",
   },
   {
-    id: 4,
+    key: 4,
     room: "Room 04",
     type: "Garage",
   },

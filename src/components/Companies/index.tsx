@@ -17,9 +17,11 @@ const Companies = () => {
   const next = async () => {
     try {
       const value = await form.validateFields();
-      console.log("🚀  value:", value);
+      console.log("🚀 ~ value:", value);
       setCurrent(current + 1);
-    } catch (err) {}
+    } catch (err) {
+      console.log("🚀 ~ err:", err);
+    }
   };
 
   const prev = () => {
@@ -33,15 +35,15 @@ const Companies = () => {
     },
     {
       title: "QR code",
-      content: <QrCode />,
+      content: <QrCode form={form} />,
     },
     {
       title: "Owner  Details ",
-      content: <OwnerDetails />,
+      content: <OwnerDetails form={form} />,
     },
     {
       title: "Confirmation",
-      content: <Confirmation />,
+      content: <Confirmation form={form} />,
     },
   ];
 

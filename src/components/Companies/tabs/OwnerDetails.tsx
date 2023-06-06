@@ -1,7 +1,7 @@
 import { Form, Input, Typography } from "antd";
 import React from "react";
 
-const OwnerDetails = () => {
+const OwnerDetails = ({ form }: any) => {
   const onFinish = (values: any) => {
     console.log("Form values:", values);
     // Perform any additional actions with the form data
@@ -9,43 +9,50 @@ const OwnerDetails = () => {
 
   return (
     <div>
-      <Form onFinish={onFinish}>
+      <Form form={form} onFinish={onFinish}>
         <Typography className="text-left text-2xl mb-6 font-medium">
           Owner Details
         </Typography>
         <div className="flex w-full gap-4">
           <Form.Item
-            name="fullName"
+            name="firstName"
             className="w-full"
-            rules={[{ required: true, message: "Please enter your full name" }]}
+            rules={[
+              { required: true, message: "Please enter your first name" },
+            ]}
           >
             <Input placeholder="First Name" />
           </Form.Item>
           <Form.Item
-            name="addressLine1"
+            name="lastName"
             className="w-full"
-            rules={[{ required: true, message: "Please enter your address" }]}
+            rules={[{ required: true, message: "Please enter your lastName" }]}
           >
-            <Input placeholder="Last Name" />
+            <Input placeholder="lastName" />
           </Form.Item>
         </div>
-        <Form.Item name="addressLine2">
+        <Form.Item
+          name="Email"
+          rules={[{ required: true, message: "Please enter your Email" }]}
+        >
           <Input placeholder="Email" />
         </Form.Item>
         <Form.Item
-          name="city"
+          name="Password"
           rules={[
             {
               required: true,
-              message: "Please enter your city",
+              message: "Please enter your password",
             },
           ]}
         >
           <Input placeholder="Password" />
         </Form.Item>
         <Form.Item
-          name="state"
-          rules={[{ required: true, message: "Please enter your state" }]}
+          name="Confirm Password"
+          rules={[
+            { required: true, message: "Please enter your Confirm Password" },
+          ]}
         >
           <Input placeholder="Confirm Password" />
         </Form.Item>

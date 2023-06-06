@@ -2,22 +2,9 @@ import React from "react";
 import { Form, Input, Select } from "antd";
 
 const AddRoom = () => {
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
-  };
-
   return (
     <div>
-      <Form
-        layout="vertical"
-        initialValues={{}}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-      >
+      <Form layout="vertical">
         <Form.Item label="Name" name="name">
           <Input />
         </Form.Item>

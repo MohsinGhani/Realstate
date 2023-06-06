@@ -1,41 +1,49 @@
 "use client";
+
 import React, { useState } from "react";
-import { Button, Space, Steps } from "antd";
+import { Button, Form, Space, Steps } from "antd";
 import { useRouter } from "next/navigation";
-import Login from "./tabs/Login";
+import Address from "./tabs/Address";
 import QrCode from "./tabs/QrCode";
 import OwnerDetails from "./tabs/OwnerDetails";
 import Confirmation from "./tabs/Confirmation";
 
-const steps = [
-  {
-    title: "Address",
-    content: <Login />,
-  },
-  {
-    title: "QR code",
-    content: <QrCode />,
-  },
-  {
-    title: "Owner  Details ",
-    content: <OwnerDetails />,
-  },
-  {
-    title: "Confirmation",
-    content: <Confirmation />,
-  },
-];
 const Companies = () => {
-  const [current, setCurrent] = useState(0);
   const router = useRouter();
+  const [form] = Form.useForm();
 
-  const next = () => {
-    setCurrent(current + 1);
+  const [current, setCurrent] = useState(0);
+
+  const next = async () => {
+    try {
+      const value = await form.validateFields();
+      console.log("🚀  value:", value);
+      setCurrent(current + 1);
+    } catch (err) {}
   };
 
   const prev = () => {
     setCurrent(current - 1);
   };
+
+  const steps = [
+    {
+      title: "Address",
+      content: <Address form={form} />,
+    },
+    {
+      title: "QR code",
+      content: <QrCode />,
+    },
+    {
+      title: "Owner  Details ",
+      content: <OwnerDetails />,
+    },
+    {
+      title: "Confirmation",
+      content: <Confirmation />,
+    },
+  ];
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
 

@@ -2,7 +2,7 @@ import { Form, Input } from "antd";
 import Typography from "antd/es/typography/Typography";
 import React from "react";
 
-const login = () => {
+const Login = () => {
   const onFinish = (values: any) => {
     console.log("Form values:", values);
     // Perform any additional actions with the form data
@@ -61,4 +61,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;

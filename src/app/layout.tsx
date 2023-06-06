@@ -11,7 +11,7 @@ export default function RootLayout({
   return withTheme(
     <html lang="en">
       <body>
-        <div className="mainContainer">{children}</div>
+        <div className="max-w-[1080px] mx-auto">{children}</div>
       </body>
     </html>
   );

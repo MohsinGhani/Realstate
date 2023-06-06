@@ -1,6 +1,6 @@
 "use client";
 
-import Companies from "@/components/Companiess";
+import Companies from "@/components/Companies";
 
 export default function Home() {
   return <Companies />;

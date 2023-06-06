@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Space, Steps } from "antd";
-import Login from "./AddressBar";
-import QrCode from "./QrCode";
-import OwnerDetails from "./OwnerDetails";
-import Confirmation from "./Confirmation";
 import { useRouter } from "next/navigation";
+import Login from "./tabs/Login";
+import QrCode from "./tabs/QrCode";
+import OwnerDetails from "./tabs/OwnerDetails";
+import Confirmation from "./tabs/Confirmation";
 
 const steps = [
   {

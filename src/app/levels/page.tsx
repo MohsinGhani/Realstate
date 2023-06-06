@@ -10,6 +10,7 @@ import {
   Input,
   Space,
 } from "antd";
+import { useRouter } from "next/navigation";
 
 const initialData = [
   {
@@ -34,10 +35,11 @@ const initialData = [
   },
 ];
 
-const TableComponent: React.FC = () => {
+const TableComponent = () => {
   const [data, setData] = useState(initialData);
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const router = useRouter();
 
   const confirm = (record: any) => {
     deleteItem(record);
@@ -52,6 +54,15 @@ const TableComponent: React.FC = () => {
       title: <span className="font-extrabold text-18">House Levels</span>,
       dataIndex: "name",
       key: "name",
+      render: (row: any) => (
+        <Space
+          onClick={() => {
+            router.push("/levels/123");
+          }}
+        >
+          {row}
+        </Space>
+      ),
     },
     {
       key: "action",

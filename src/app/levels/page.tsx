@@ -59,6 +59,7 @@ const LevelsPage = () => {
           onClick={() => {
             router.push("/levels/123");
           }}
+          className="cursor-pointer"
         >
           {row}
         </Space>

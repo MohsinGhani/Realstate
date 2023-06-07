@@ -9,7 +9,6 @@ interface OwnerDetails {
 const OwnerDetails: React.FC<OwnerDetails> = ({ form }) => {
   const onFinish = (values: string) => {
     console.log("Form values:", values);
-    // Perform any additional actions with the form data
   };
 
   return (

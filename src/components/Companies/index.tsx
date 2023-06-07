@@ -7,6 +7,7 @@ import Address from "./tabs/Address";
 import QrCode from "./tabs/QrCode";
 import OwnerDetails from "./tabs/OwnerDetails";
 import Confirmation from "./tabs/Confirmation";
+import { signup } from "../../services/AuthService";
 
 const Companies = () => {
   const router = useRouter();
@@ -17,7 +18,16 @@ const Companies = () => {
   const next = async () => {
     try {
       const value = await form.validateFields();
-      console.log("🚀 ~ value:", value);
+      // const value = await form.getFieldsValue();
+      console.log("🚀  value:", value);
+
+      // const res = await signup({
+      //   password: value.Password,
+      //   username: value.Email,
+      //   email: value.Email,
+      // });
+      // console.log("🚀  res:", res);
+
       setCurrent(current + 1);
     } catch (err) {
       console.log("🚀 ~ err:", err);

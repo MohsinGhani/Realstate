@@ -1,0 +1,31 @@
+service: realEstate
+disabledDeprecations: "*" # To disable all deprecation messages
+
+provider:
+  name: aws
+  profile: real_estate
+  runtime: nodejs16.x
+  stage: ${opt:stage, 'dev'}
+  region: ${file(./config/config.${opt:stage, self:provider.dev, 'dev'}.json):REGION}
+  environment:
+    ENV: ${opt:stage, 'dev'}
+    USER_POOL_ID: ${file(./config/config.${opt:stage, self:provider.dev, 'dev'}.json):USER_POOL_ID}
+    REGION: ${file(./config/config.${opt:stage, self:provider.dev, 'dev'}.json):REGION}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - ses:SendRawEmail
+      Resource:
+        - arn:aws:ses:*:*:identity/*
+
+functions:
+  # authorize:
+  #   handler: handler.authorize
+
+  test:
+    handler: handler.test
+    events:
+      - http:
+          path: api/test
+          method: post
+          cors: true

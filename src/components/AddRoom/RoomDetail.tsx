@@ -6,7 +6,7 @@ const iconProps = {
 };
 
 const RoomDetail = ({ array, form, removeField }: any) => {
-  const handleOnRemove = async (event: any) => {
+  const handleOnRemove: any = async (event: any) => {
     const value = form.getFieldsValue();
     const [find]: any = Object.entries(value).find(
       ([_, value]: any) => value?.file?.uid === event?.uid
@@ -72,4 +72,5 @@ const RoomDetail = ({ array, form, removeField }: any) => {
     </div>
   ));
 };
+
 export default RoomDetail;

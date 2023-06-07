@@ -2,34 +2,45 @@
 
 import React, { useState } from "react";
 import { Button, Form, Input, Select, message } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { DownloadOutlined } from "@ant-design/icons";
 import RoomDetail from "./RoomDetail";
 
-const iconProps = {
+interface Field {
+  title: string;
+  name: string;
+  isDeleted: boolean;
+}
+
+const iconProps: { rev?: undefined } = {
   rev: undefined,
 };
 
-const array = [
+const array: Field[] = [
   { title: "Floor", name: "floor", isDeleted: false },
   { title: "Paint", name: "paint", isDeleted: false },
 ];
 
-const AddRoom = ({ form }: any) => {
-  const [first, setfirst] = useState<any>(array);
+interface AddRoomProps {
+  form: any;
+}
+
+const AddRoom: React.FC<AddRoomProps> = ({ form }: any) => {
+  const [first, setfirst] = useState<Field[]>(array);
+
   const addField = () => {
     try {
-      const value = form.getFieldValue("addFieldName");
+      const value: string | undefined = form.getFieldValue("addFieldName");
 
       if (!value?.length) {
         return message.info("Please write the field name");
       }
 
       const findValue = first?.find(
-        (x: any) => x?.name?.toLowerCase() === value?.toLowerCase()
+        (x: Field) => x?.name?.toLowerCase() === value?.toLowerCase()
       );
 
       if (!findValue?.name) {
-        setfirst([...first, { title: value, name: value, isDeleted: true }]);
+        setfirst([...first, { title: value!, name: value!, isDeleted: true }]);
         form.setFieldsValue({
           addFieldName: undefined,
         });
@@ -41,9 +52,9 @@ const AddRoom = ({ form }: any) => {
     }
   };
 
-  const removeField = (value: any) => {
-    let myArray = first;
-    myArray = myArray.filter((obj: any) => obj.name != value);
+  const removeField = (value: string) => {
+    let myArray = [...first];
+    myArray = myArray.filter((obj: Field) => obj.name !== value);
     setfirst(myArray);
   };
 
@@ -106,7 +117,7 @@ const AddRoom = ({ form }: any) => {
           </Form.Item>
           <Button
             type="primary"
-            icon={<PlusOutlined {...iconProps} />}
+            icon={<DownloadOutlined rev="" />}
             onClick={addField}
           >
             Add field

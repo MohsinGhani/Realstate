@@ -8,7 +8,7 @@ import QrCode from "./tabs/QrCode";
 import OwnerDetails from "./tabs/OwnerDetails";
 import Confirmation from "./tabs/Confirmation";
 
-const Companies = () => {
+const Registration = () => {
   const router = useRouter();
   const [form] = Form.useForm();
 
@@ -86,4 +86,4 @@ const Companies = () => {
   );
 };
 
-export default Companies;
+export default Registration;

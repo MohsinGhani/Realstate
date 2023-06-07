@@ -1,11 +1,22 @@
 import React from "react";
 import { Button, DatePicker, Form, Input, Space, Upload } from "antd";
 import { UploadOutlined, DeleteTwoTone } from "@ant-design/icons";
+
+interface RoomDetailProps {
+  array: any;
+  form: any;
+  removeField: (name: string) => void;
+}
+
 const iconProps = {
   rev: undefined,
 };
 
-const RoomDetail = ({ array, form, removeField }: any) => {
+const RoomDetail: React.FC<RoomDetailProps> = ({
+  array,
+  form,
+  removeField,
+}) => {
   const handleOnRemove = async (event: any) => {
     const value = form.getFieldsValue();
     const [find]: any = Object.entries(value).find(
@@ -72,4 +83,5 @@ const RoomDetail = ({ array, form, removeField }: any) => {
     </div>
   ));
 };
+
 export default RoomDetail;

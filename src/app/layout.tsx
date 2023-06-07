@@ -2,6 +2,7 @@
 
 import "./globals.scss";
 import withTheme from "../../theme";
+import Header from "@/app/header";
 
 export default function RootLayout({
   children,
@@ -11,7 +12,10 @@ export default function RootLayout({
   return withTheme(
     <html lang="en">
       <body>
-        <div className="max-w-[1080px] mx-auto">{children}</div>
+        <div className="max-w-[1080px] mx-auto">
+          <Header />
+          {children}
+        </div>
       </body>
     </html>
   );

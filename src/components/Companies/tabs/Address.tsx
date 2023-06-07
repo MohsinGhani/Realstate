@@ -1,8 +1,13 @@
 import { Form, Input } from "antd";
 import Typography from "antd/es/typography/Typography";
 import React from "react";
+import { FormInstance } from "antd/lib/form";
 
-const Address = ({ form }: any) => {
+interface Address {
+  form: FormInstance;
+}
+
+const Address: React.FC<Address> = ({ form }) => {
   return (
     <div>
       <Form form={form}>

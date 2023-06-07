@@ -1,8 +1,13 @@
 import { Form, Input, Typography } from "antd";
 import React from "react";
+import { FormInstance } from "antd/lib/form";
 
-const OwnerDetails = ({ form }: any) => {
-  const onFinish = (values: any) => {
+interface OwnerDetails {
+  form: FormInstance;
+}
+
+const OwnerDetails: React.FC<OwnerDetails> = ({ form }) => {
+  const onFinish = (values: string) => {
     console.log("Form values:", values);
     // Perform any additional actions with the form data
   };

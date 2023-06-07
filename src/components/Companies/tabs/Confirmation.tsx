@@ -1,7 +1,12 @@
 import { Form, Input, Typography } from "antd";
 import React from "react";
+import { FormInstance } from "antd/lib/form";
 
-const Confirmation = ({ form }: any) => {
+interface Confirmation {
+  form: FormInstance;
+}
+
+const Confirmation: React.FC<Confirmation> = ({ form }) => {
   return (
     <div>
       <Form form={form}>

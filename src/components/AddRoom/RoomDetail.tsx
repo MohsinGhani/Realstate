@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Button, DatePicker, Form, Input, Space, Upload } from "antd";
 import { UploadOutlined, DeleteTwoTone } from "@ant-design/icons";
@@ -74,5 +72,4 @@ const RoomDetail = ({ array, form, removeField }: any) => {
     </div>
   ));
 };
-
 export default RoomDetail;

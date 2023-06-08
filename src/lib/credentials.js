@@ -1,9 +1,9 @@
 const Credentials = {
   cognito: {
-    userPoolId: "eu-central-1_ZltcPnHjE",
-    identityPoolId: "eu-central-1:37eaa4ed-a2f1-4e5d-8f13-2435148c2e18",
-    userPoolWebClientId: "4r7dttktv2o4g4udm8tr8uq892",
-    region: "eu-central-1",
+    userPoolId: "us-east-2_mTgRNMQTv",
+    identityPoolId: "us-east-2:574f612f-d527-4bb9-a269-ea9321f76c05",
+    userPoolWebClientId: "64pi1009bergt61j6dnvgq53r5",
+    region: "us-east-2",
   },
 
   // S3: {

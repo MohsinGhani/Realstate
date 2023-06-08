@@ -1,33 +1,21 @@
 const QRCode = require("qrcode");
 const { sendMail } = require("../lib/emailTemplates");
 
-async function test(event, context, callback) {
-  // const { emailAddress, link } = event;
+async function sendRecieverEmail(event, context, callback) {
+  let params = JSON.parse(event.body);
+  console.log("🚀 ~ params", params);
 
-  console.log("🚀  event:", event);
   try {
-    // Generate QR code data URL
-    const qrCodeDataURL = await QRCode.toDataURL(
-      "http://localhost:3000/landingPage/asdasd"
-    );
-
-    const qrCodeURL = await QRCode.toDataURL("https://codedamn.com");
+    const qrCodeDataURL = await QRCode.toDataURL(params?.link);
 
     // Send email with QR code as attachment
-    const params = {
+    const payload = {
       from: "mohsinghani.777@gmail.com",
       to: "syedrahmeer12@gmail.com",
-      subject: "Test email with attachment",
-      // text: 'Hello, this is a test email with attachment',
-      html: `
-      <div className="">
-      
-      <img src="${qrCodeURL}" alt="QR Code for codedamn.com"/>
-      <img src="cid:qrcode.png"/>
-      
-      </div>
-      `,
+      subject: "send email with attachment",
+      // text: 'Hello, this is a send email with attachment',
 
+      html: `<a href="${params?.link}" target="_blank">send email with attachment</a>`,
       attachments: [
         {
           filename: "qrcode.png",
@@ -37,7 +25,7 @@ async function test(event, context, callback) {
       ],
     };
 
-    await sendMail(params);
+    await sendMail(payload);
 
     return callback(null, {
       body: JSON.stringify("done"),
@@ -51,9 +39,8 @@ async function test(event, context, callback) {
     });
   } catch (err) {
     console.log("🚀  err:", err);
-
     throw err;
   }
 }
 
-exports.test = test;
+exports.sendRecieverEmail = sendRecieverEmail;

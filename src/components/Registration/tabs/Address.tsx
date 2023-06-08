@@ -5,33 +5,27 @@ import { FormInstance } from "antd/lib/form";
 
 interface Address {
   form: FormInstance;
+  required: any;
+  isEditable: any;
 }
 
-const Address: React.FC<Address> = ({ form }) => {
+const Address: React.FC<Address> = ({ form, required, isEditable }) => {
   return (
     <div>
-      <Form form={form}>
+      <Form form={form} disabled={isEditable}>
         <Typography className="text-left text-2xl  mb-6 font-medium">
           Address
         </Typography>
         <div className="flex w-full gap-4">
-          <Form.Item
-            name="street"
-            className="w-full"
-            rules={[{ required: true }]}
-          >
+          <Form.Item name="street" className="w-full" rules={[{ required }]}>
             <Input placeholder="Street" />
           </Form.Item>
-          <Form.Item
-            name="city"
-            className="w-full"
-            rules={[{ required: true }]}
-          >
+          <Form.Item name="city" className="w-full" rules={[{ required }]}>
             <Input placeholder="City" />
           </Form.Item>
         </div>
         <br></br>
-        <Form.Item name="state" rules={[{ required: true }]}>
+        <Form.Item name="state" rules={[{ required }]}>
           <Input placeholder="State" />
         </Form.Item>
         <br></br>
@@ -39,7 +33,7 @@ const Address: React.FC<Address> = ({ form }) => {
           name="zipCode"
           rules={[
             {
-              required: true,
+              required,
             },
           ]}
         >
@@ -49,10 +43,7 @@ const Address: React.FC<Address> = ({ form }) => {
         <Typography className="text-left text-2xl  mb-2 font-medium ">
           Contractor Code
         </Typography>
-        <Form.Item
-          name="contractorCode"
-          rules={[{ required: true, message: "Please enter your state" }]}
-        >
+        <Form.Item name="contractorCode" rules={[{ required }]}>
           <Input placeholder=" Contractor Code" />
         </Form.Item>
       </Form>

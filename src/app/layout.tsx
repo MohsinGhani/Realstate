@@ -4,6 +4,7 @@ import "./globals.scss";
 import withTheme from "../../theme";
 import { Amplify } from "aws-amplify";
 import awsCognitoConfig from "../lib/awsCognitoConfig";
+import Header from "./Header";
 
 export default function RootLayout({
   children,
@@ -15,7 +16,10 @@ export default function RootLayout({
   return withTheme(
     <html lang="en">
       <body>
-        <div className="max-w-[1080px] mx-auto">{children}</div>
+        <div className="max-w-[1080px] mx-auto">
+          <Header />
+          {children}
+        </div>
       </body>
     </html>
   );

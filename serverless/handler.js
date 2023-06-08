@@ -1,8 +1,8 @@
 "use strict";
 
-const { test } = require("./controller/test");
+const { sendRecieverEmail } = require("./controller/sendRecieverEmail");
 
-module.exports.test = async (event, context, callback) => {
+module.exports.sendRecieverEmail = async (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
-  return test(event, context, callback);
+  return sendRecieverEmail(event, context, callback);
 };

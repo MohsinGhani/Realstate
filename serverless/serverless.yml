@@ -1,4 +1,4 @@
-service: realEstate
+service: RealEstate
 disabledDeprecations: "*" # To disable all deprecation messages
 
 provider:
@@ -22,10 +22,10 @@ functions:
   # authorize:
   #   handler: handler.authorize
 
-  test:
-    handler: handler.test
+  sendRecieverEmail:
+    handler: handler.sendRecieverEmail
     events:
       - http:
-          path: api/test
+          path: api/sendRecieverEmail
           method: post
           cors: true

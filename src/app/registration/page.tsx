@@ -1,9 +1,9 @@
 "use client";
 
-import Registration from "../../components/Registration";
+import Registration from "@/components/Registration";
 
-const registration = ({ searchParams }: any) => {
+const registrationPage = ({ searchParams }: any) => {
   return <Registration searchParams={searchParams} />;
 };
 
-export default registration;
+export default registrationPage;

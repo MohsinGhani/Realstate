@@ -4,7 +4,7 @@ import "./globals.scss";
 import withTheme from "../../theme";
 import { Amplify } from "aws-amplify";
 import awsCognitoConfig from "../lib/awsCognitoConfig";
-import Header from "./Header";
+import Header from "@/components/Header";
 
 export default function RootLayout({
   children,

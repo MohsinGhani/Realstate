@@ -1,5 +1,5 @@
 import { Auth } from "aws-amplify";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 
 export const signup = (user: any) => {
   const { password, username, ...rest } = user;

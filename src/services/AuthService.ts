@@ -23,10 +23,10 @@ export const signup = (user: any) => {
   });
 };
 
-export const confirm = (email: any, confirmationCode: any) => {
+export const confirm = (email: any, confirmationCode: any, password: any) => {
   return new Promise(async (resolve, reject) => {
     Auth.confirmSignUp(email, confirmationCode)
-      // .then(() => Auth.signIn(email, "ticalol354"))
+      .then(() => Auth.signIn(email, password))
       .then((confirmedUser) => resolve({ confirmedUser, email }))
       .catch((error) => reject(error.message));
   });

@@ -6,12 +6,11 @@ import Address from "./tabs/Address";
 import QrCode from "./tabs/QrCode";
 import OwnerDetails from "./tabs/OwnerDetails";
 import Confirmation from "./tabs/Confirmation";
-import { signup, confirm, login, logout } from "../../services/AuthService";
+import { signup, confirm } from "../../services/AuthService";
 
 import { useAxo } from "../../services/helpers/api";
 import { API } from "../../services/constant";
 import { useRouter } from "next/navigation";
-import { Hub } from "aws-amplify";
 
 const Registration = ({ searchParams }: any) => {
   const [form] = Form.useForm();
@@ -19,25 +18,6 @@ const Registration = ({ searchParams }: any) => {
   const router = useRouter();
 
   const [{ loading }, perSendEmail] = useAxo("post", API.RECIEVER_Email);
-
-  const loginHandler = async () => {
-    try {
-      const res = await login("kiyiyab221@ozatvn.com", "kiyiyab221");
-      console.log("🚀  res:", res);
-    } catch (e: any) {
-      message.error(e.message);
-      throw new Error(e);
-    }
-  };
-  const logoutHandler = async () => {
-    try {
-      const res = await logout();
-      console.log("🚀  res:", res);
-    } catch (e: any) {
-      message.error(e.message);
-      throw new Error(e);
-    }
-  };
 
   useMemo(() => {
     if (!!searchParams?.state?.length) {
@@ -66,20 +46,6 @@ const Registration = ({ searchParams }: any) => {
     }
   };
 
-  Hub.listen("auth", ({ payload }) => {
-    console.log("🚀  payload:", payload);
-    const { event } = payload;
-
-    console.log("🚀  event:", event);
-    if (event === "autoSignIn") {
-      const user = payload.data;
-      console.log("🚀  user:", user);
-      // assign user
-    } else if (event === "autoSignIn_failure") {
-      // redirect to sign in page
-    }
-  });
-
   const prev = () => {
     setCurrent(current - 1);
   };
@@ -106,7 +72,6 @@ const Registration = ({ searchParams }: any) => {
         username: value.email,
         email: value.email,
       });
-      console.log("🚀  res:", res);
     } catch (e: any) {
       message.error(e.message);
       throw new Error(e);
@@ -115,8 +80,8 @@ const Registration = ({ searchParams }: any) => {
 
   const confirmEmailHandler = async (value: any) => {
     try {
-      const res = await confirm(value.email, value.confirmationCode);
-      console.log("🚀  res:", res);
+      await confirm(value.email, value.confirmationCode, value.password);
+      router.push("/levels");
     } catch (e: any) {
       message.error(e.message);
       throw new Error(e);
@@ -189,23 +154,6 @@ const Registration = ({ searchParams }: any) => {
           <Button type="primary" onClick={() => next()} loading={loading}>
             Next
           </Button>
-
-          {/* <Space>
-            <Button
-              type="primary"
-              onClick={() => loginHandler()}
-              loading={loading}
-            >
-              login
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => logoutHandler()}
-              loading={loading}
-            >
-              logout
-            </Button>
-          </Space> */}
         </Space>
       </div>
     </div>

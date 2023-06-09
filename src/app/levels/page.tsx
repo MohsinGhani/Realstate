@@ -11,6 +11,7 @@ import {
   Space,
 } from "antd";
 import { useRouter } from "next/navigation";
+import withAuth from "@/components/common/withAuth";
 
 const initialData = [
   {
@@ -177,4 +178,4 @@ const ItemForm: React.FC<any> = ({ item, onSave }) => {
   );
 };
 
-export default LevelsPage;
+export default withAuth(LevelsPage);

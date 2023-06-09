@@ -86,7 +86,11 @@ const Registration = ({ searchParams }: any) => {
 
   const sendEmail = async (value: any) => {
     try {
-      const link = `${window.location.origin}/registration?street=${value?.street}&city=${value?.city}&state=${value?.state}&zipCode=${value?.zipCode}&contractorCode=${value?.contractorCode}&recieverEmail=${value?.recieverEmail}`;
+      let link: any = "";
+
+      if (typeof window !== "undefined") {
+        link = `${window?.location?.origin}/registration?street=${value?.street}&city=${value?.city}&state=${value?.state}&zipCode=${value?.zipCode}&contractorCode=${value?.contractorCode}&recieverEmail=${value?.recieverEmail}`;
+      }
       await perSendEmail({ link });
       router.push(link);
     } catch (e: any) {

@@ -10,7 +10,10 @@ interface QrCode {
 }
 const QrCode: React.FC<QrCode> = ({ form, required, isEditable }) => {
   const value = form.getFieldsValue();
-  const link = `${window.location.origin}/registration?street=${value?.street}&city=${value?.city}&state=${value?.state}&zipCode=${value?.zipCode}&contractorCode=${value?.contractorCode}`;
+  let link: any = "";
+  if (typeof window !== "undefined") {
+    link = `${window?.location?.origin}/registration?street=${value?.street}&city=${value?.city}&state=${value?.state}&zipCode=${value?.zipCode}&contractorCode=${value?.contractorCode}`;
+  }
 
   return (
     <div>

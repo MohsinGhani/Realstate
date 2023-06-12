@@ -10,11 +10,14 @@ import { signup, confirm } from "../../services/AuthService";
 
 import { useAxo } from "../../services/helpers/api";
 import { API } from "../../services/constant";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-const Registration = ({ searchParams }: any) => {
+const Registration = () => {
   const [form] = Form.useForm();
   const router = useRouter();
+  const searchParams: any = useSearchParams();
+  const recieverEmail = searchParams.get("recieverEmail");
+
   const [current, setCurrent] = useState(0);
   const [laoder, setLaoder] = useState(false);
 
@@ -22,10 +25,21 @@ const Registration = ({ searchParams }: any) => {
   const [{}, userDetailsPost] = useAxo("post", API.USER_DETAILS);
 
   useMemo(() => {
-    console.log("🚀 length:", searchParams?.state?.length);
-    if (!!searchParams?.state?.length) {
-      console.log("🚀  searchParams:", searchParams);
-      form.setFieldsValue({ ...searchParams });
+    const street = searchParams.get("street");
+    const city = searchParams.get("city");
+    const state = searchParams.get("state");
+    const zipCode = searchParams.get("zipCode");
+    const contractorCode = searchParams.get("contractorCode");
+
+    if (!!recieverEmail) {
+      form.setFieldsValue({
+        street,
+        city,
+        state,
+        zipCode,
+        contractorCode,
+        recieverEmail,
+      });
       setCurrent(2);
     }
   }, [form, searchParams]);
@@ -36,7 +50,7 @@ const Registration = ({ searchParams }: any) => {
       const value = await form.validateFields();
       if (current == 0) {
       } else if (current == 1) {
-        if (!searchParams?.state?.length) {
+        if (!recieverEmail) {
           return sendEmail(value);
         }
       } else if (current == 2) {
@@ -107,7 +121,7 @@ const Registration = ({ searchParams }: any) => {
         <Address
           form={form}
           required={current == 0}
-          isEditable={!!searchParams?.state?.length}
+          isEditable={!!recieverEmail}
         />
       ),
     },
@@ -117,7 +131,7 @@ const Registration = ({ searchParams }: any) => {
         <QrCode
           form={form}
           required={current == 1}
-          isEditable={!!searchParams?.state?.length}
+          isEditable={!!recieverEmail}
         />
       ),
     },

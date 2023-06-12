@@ -2,8 +2,8 @@
 
 import Registration from "@/components/Registration";
 
-const registrationPage = ({ searchParams }: any) => {
-  return <Registration searchParams={searchParams} />;
+const RegistrationPage = () => {
+  return <Registration />;
 };
 
-export default registrationPage;
+export default RegistrationPage;

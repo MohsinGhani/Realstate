@@ -14,13 +14,17 @@ import { useRouter } from "next/navigation";
 
 const Registration = ({ searchParams }: any) => {
   const [form] = Form.useForm();
-  const [current, setCurrent] = useState(0);
   const router = useRouter();
+  const [current, setCurrent] = useState(0);
+  const [laoder, setLaoder] = useState(false);
 
-  const [{ loading }, perSendEmail] = useAxo("post", API.RECIEVER_Email);
+  const [{}, perSendEmail] = useAxo("post", API.RECIEVER_Email);
+  const [{}, userDetailsPost] = useAxo("post", API.USER_DETAILS);
 
   useMemo(() => {
+    console.log("🚀 length:", searchParams?.state?.length);
     if (!!searchParams?.state?.length) {
+      console.log("🚀  searchParams:", searchParams);
       form.setFieldsValue({ ...searchParams });
       setCurrent(2);
     }
@@ -28,6 +32,7 @@ const Registration = ({ searchParams }: any) => {
 
   const next = async () => {
     try {
+      setLaoder(true);
       const value = await form.validateFields();
       if (current == 0) {
       } else if (current == 1) {
@@ -37,12 +42,14 @@ const Registration = ({ searchParams }: any) => {
       } else if (current == 2) {
         await signuphandler(value);
       } else if (current == 3) {
-        await confirmEmailHandler(value);
+        return await confirmEmailHandler(value);
       }
 
       return setCurrent(current + 1);
     } catch (err) {
       console.log("err:", err);
+    } finally {
+      setLaoder(false);
     }
   };
 
@@ -67,7 +74,7 @@ const Registration = ({ searchParams }: any) => {
 
   const signuphandler = async (value: any) => {
     try {
-      const res = await signup({
+      await signup({
         password: value.password,
         username: value.email,
         email: value.email,
@@ -80,7 +87,12 @@ const Registration = ({ searchParams }: any) => {
 
   const confirmEmailHandler = async (value: any) => {
     try {
-      await confirm(value.email, value.confirmationCode, value.password);
+      const res: any = await confirm(
+        value.email,
+        value.confirmationCode,
+        value.password
+      );
+      await userDetailsPost({ id: res?.confirmedUser?.username, ...value });
       router.push("/levels");
     } catch (e: any) {
       message.error(e.message);
@@ -119,17 +131,15 @@ const Registration = ({ searchParams }: any) => {
     },
   ];
 
-  const items = steps.map((item: any) => ({
-    key: item.title,
-    title: item.title,
-  }));
-
   return (
     <div>
       <div className="">
         <Steps
           current={current}
-          items={items}
+          items={steps.map((item: any) => ({
+            key: item.title,
+            title: item.title,
+          }))}
           labelPlacement="vertical"
           className="mb-4"
         />
@@ -146,12 +156,12 @@ const Registration = ({ searchParams }: any) => {
       <div className="flex justify-end">
         <Space>
           {current > 0 && current < steps.length - 1 && (
-            <Button onClick={() => prev()} disabled={loading}>
+            <Button onClick={() => prev()} disabled={laoder}>
               {"Previous"}
             </Button>
           )}
 
-          <Button type="primary" onClick={() => next()} loading={loading}>
+          <Button type="primary" onClick={() => next()} loading={laoder}>
             Next
           </Button>
         </Space>

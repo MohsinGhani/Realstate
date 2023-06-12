@@ -106,7 +106,9 @@ const LevelsPage2 = () => {
     try {
       const value = await form.validateFields();
       console.log("🚀  value:", value);
-    } catch (err) {}
+    } catch (err) {
+      console.log("err:", err);
+    }
   };
 
   return (

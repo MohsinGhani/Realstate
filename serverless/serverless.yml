@@ -15,8 +15,8 @@ provider:
     - Effect: Allow
       Action:
         - ses:SendRawEmail
-      Resource:
-        - arn:aws:ses:*:*:identity/*
+        - dynamodb:*
+      Resource: "*"
 
 functions:
   # authorize:
@@ -27,5 +27,29 @@ functions:
     events:
       - http:
           path: api/sendRecieverEmail
+          method: post
+          cors: true
+
+  putUsersInDB:
+    handler: handler.putUsersInDB
+    events:
+      - http:
+          path: api/putUsersInDB
+          method: post
+          cors: true
+
+  updateUserDetails:
+    handler: handler.updateUserDetails
+    events:
+      - http:
+          path: api/updateUserDetails
+          method: post
+          cors: true
+
+  userFloors:
+    handler: handler.userFloors
+    events:
+      - http:
+          path: api/userFloors
           method: post
           cors: true

@@ -6,9 +6,9 @@ const Credentials = {
     region: "us-east-2",
   },
 
-  // S3: {
-  //   bucket: process.env.NEXT_PUBLIC_BUCKET,
-  // },
+  S3: {
+    bucket: "real-estate-1",
+  },
 };
 
 export default Credentials;

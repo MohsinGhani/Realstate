@@ -7,6 +7,7 @@ const API = {
   RECIEVER_Email: `${baseUrl}/${currentEnv}/api/sendRecieverEmail`,
   USER_DETAILS: `${baseUrl}/${currentEnv}/api/updateUserDetails`,
   USER_FLOORS: `${baseUrl}/${currentEnv}/api/userFloors`,
+  USER_ROOMS: `${baseUrl}/${currentEnv}/api/userRooms`,
 };
 
 export { API, currentEnv };

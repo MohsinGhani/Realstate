@@ -8,6 +8,7 @@ async function updateUserDetails(event, context, callback) {
   try {
     delete params.confirm;
     delete params.confirmationCode;
+    delete params.password;
 
     const userParams = {
       TableName: "realEstate-users",

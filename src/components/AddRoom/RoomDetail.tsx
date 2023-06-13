@@ -1,11 +1,11 @@
 import React from "react";
-import { Button, DatePicker, Form, Input, Space, Upload } from "antd";
+import { Button, DatePicker, Form, Input, Upload } from "antd";
 import { UploadOutlined, DeleteTwoTone } from "@ant-design/icons";
 const iconProps = {
   rev: undefined,
 };
 
-const RoomDetail = ({ array, form, removeField }: any) => {
+const RoomDetail = ({ typeFields, form, removeField }: any) => {
   const handleOnRemove: any = async (event: any) => {
     const value = form.getFieldsValue();
     const [find]: any = Object.entries(value).find(
@@ -17,8 +17,8 @@ const RoomDetail = ({ array, form, removeField }: any) => {
     });
   };
 
-  return array?.map(({ title, name, isDeleted }: any) => (
-    <div key={name}>
+  return typeFields?.map(({ title, name, isDeleted }: any, i: any) => (
+    <div key={i}>
       <div className="flex justify-between">
         <h4>{title}</h4>
         {isDeleted && (
@@ -33,36 +33,44 @@ const RoomDetail = ({ array, form, removeField }: any) => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <Form.Item
-          name={`${name}InstallDate`}
+          name={[name, "InstallDate"]}
           label={`${title} Install Date`}
           className="mb-1"
+          rules={[{ required: true }]}
         >
-          <DatePicker className="w-full" />
+          <DatePicker className="w-full" format={"YYYY-MM-DD"} />
         </Form.Item>
         <Form.Item
-          name={`${name}Warranty`}
+          name={[name, "Warranty"]}
           label={`${title} Warranty`}
           className="mb-1"
+          rules={[{ required: true }]}
         >
           <Input placeholder={`${title} Warranty`} />
         </Form.Item>
-        <Form.Item name={`${name}Picture`} label={`${title} Picture`}>
+        <Form.Item
+          name={[name, "Picture"]}
+          label={`${title} Picture`}
+          rules={[{ required: true }]}
+        >
           <Upload
             listType="picture"
             className="upload-list-inline"
             maxCount={1}
-            onRemove={handleOnRemove}
             onPreview={() => null}
           >
             <Button icon={<UploadOutlined {...iconProps} />}>Upload</Button>
           </Upload>
         </Form.Item>
-        <Form.Item name={`${name}Receipt`} label={`${title} Receipt`}>
+        <Form.Item
+          name={[name, "Receipt"]}
+          label={`${title} Receipt`}
+          rules={[{ required: true }]}
+        >
           <Upload
             listType="picture"
             className="upload-list-inline"
             maxCount={1}
-            onRemove={handleOnRemove}
             onPreview={() => null}
           >
             <Button icon={<UploadOutlined {...iconProps} />}>Upload</Button>

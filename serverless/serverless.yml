@@ -53,3 +53,11 @@ functions:
           path: api/userFloors
           method: post
           cors: true
+
+  userRooms:
+    handler: handler.userRooms
+    events:
+      - http:
+          path: api/userRooms
+          method: post
+          cors: true

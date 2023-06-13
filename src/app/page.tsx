@@ -3,6 +3,7 @@
 import { Button } from "antd";
 import React from "react";
 import { useRouter } from "next/navigation";
+import withAuth from "@/components/common/withAuth";
 
 const LandingPage = () => {
   const router = useRouter();
@@ -20,4 +21,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default withAuth(LandingPage);

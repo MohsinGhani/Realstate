@@ -1,6 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Table, Button, Modal, Popconfirm, Input, Space, Form } from "antd";
+import {
+  Table,
+  Button,
+  Modal,
+  Popconfirm,
+  Input,
+  Space,
+  Form,
+  Breadcrumb,
+} from "antd";
 import { useRouter } from "next/navigation";
 import withAuth from "@/components/common/withAuth";
 
@@ -36,7 +45,6 @@ const LevelsPage = () => {
   };
 
   const deleteItem = async (item: any) => {
-    console.log("🚀  item:", item);
     try {
       await userFloorPost({ userId: user.id, deleteId: item?.id });
     } catch (err) {
@@ -52,20 +60,10 @@ const LevelsPage = () => {
   const handleOnFinish = async () => {
     try {
       const value = await form.validateFields();
-      await userFloorPost({ userId: user.id, name: value?.floor });
-      handleAddModalClose();
-    } catch (err) {
-      console.log("err:", err);
-    }
-  };
-
-  const handleOnUpdate = async () => {
-    try {
-      const value = await form.validateFields();
       await userFloorPost({
+        id: isModalVisible?.id,
         userId: user.id,
         name: value?.floor,
-        id: isModalVisible?.id,
       });
       handleAddModalClose();
     } catch (err) {
@@ -78,14 +76,14 @@ const LevelsPage = () => {
       title: <span className="font-extrabold text-18">House Levels</span>,
       dataIndex: "name",
       key: "name",
-      render: (row: any) => (
+      render: (_: any, record: any) => (
         <Space
           onClick={() => {
-            router.push("/levels/123");
+            router.push(`/levels/${record?.id}`);
           }}
           className="cursor-pointer"
         >
-          {row}
+          {record?.name}
         </Space>
       ),
     },
@@ -116,13 +114,20 @@ const LevelsPage = () => {
 
   return (
     <div>
+      <Breadcrumb>
+        <Breadcrumb.Item>Floor</Breadcrumb.Item>
+      </Breadcrumb>
       <div className="flex justify-end mb-4">
         <Button type="primary" onClick={() => handleAddModalOpen(null)}>
           Add Level
         </Button>
       </div>
 
-      <Table dataSource={data} columns={columns} loading={loading} />
+      <Table
+        dataSource={(data || [])?.map((t: any, i: any) => ({ ...t, key: i }))}
+        columns={columns}
+        loading={loading}
+      />
 
       <Modal
         title={!isModalVisible?.id ? "Add floor" : "Edit floor"}
@@ -133,7 +138,7 @@ const LevelsPage = () => {
             Cancel
           </Button>,
           <Button
-            onClick={!isModalVisible?.id ? handleOnFinish : handleOnUpdate}
+            onClick={handleOnFinish}
             type="primary"
             key="2"
             loading={loading}

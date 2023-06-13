@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Button, Form, Input, Select, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import RoomDetail from "./RoomDetail";
@@ -9,13 +9,9 @@ const iconProps = {
   rev: undefined,
 };
 
-const array = [
-  { title: "Floor", name: "floor", isDeleted: false },
-  { title: "Paint", name: "paint", isDeleted: false },
-];
+const AddRoom = ({ form, typeFields, setTypeFields }: any) => {
+  const type = Form.useWatch("type", form);
 
-const AddRoom = ({ form }: any) => {
-  const [first, setfirst] = useState<any>(array);
   const addField = () => {
     try {
       const value = form.getFieldValue("addFieldName");
@@ -24,12 +20,15 @@ const AddRoom = ({ form }: any) => {
         return message.info("Please write the field name");
       }
 
-      const findValue = first?.find(
+      const findValue = typeFields?.find(
         (x: any) => x?.name?.toLowerCase() === value?.toLowerCase()
       );
 
       if (!findValue?.name) {
-        setfirst([...first, { title: value, name: value, isDeleted: true }]);
+        setTypeFields([
+          ...typeFields,
+          { title: value, name: value, isDeleted: true },
+        ]);
         form.setFieldsValue({
           addFieldName: undefined,
         });
@@ -42,76 +41,146 @@ const AddRoom = ({ form }: any) => {
   };
 
   const removeField = (value: any) => {
-    let myArray = first;
+    let myArray = typeFields;
     myArray = myArray.filter((obj: any) => obj.name != value);
-    setfirst(myArray);
+    setTypeFields(myArray);
   };
+
+  const OnTypeChange = (value: any) => {
+    let array = [];
+
+    switch (value) {
+      case "Living Room":
+      case "Bedroom":
+      case "Bonus Room Hallway":
+      case "Office":
+      case "Hallway":
+      case "Stairs":
+      case "Other":
+        array = [
+          { title: "Floor", name: "Floor", isDeleted: true },
+          { title: "Paint", name: "Paint", isDeleted: true },
+          { title: "Lighting/Fan", name: "Lighting/Fan", isDeleted: true },
+        ];
+        setTypeFields(array);
+        break;
+
+      case "Garage":
+        array = [
+          { title: "Garage Door", name: "Garage Door", isDeleted: true },
+          { title: "Lighting", name: "Lighting", isDeleted: true },
+          { title: "Paint", name: "Paint", isDeleted: true },
+        ];
+
+        setTypeFields(array);
+        break;
+
+      case "Kitchen":
+        array = [
+          { title: "Countertops", name: "Countertops", isDeleted: true },
+          { title: "Lighting", name: "Lighting", isDeleted: true },
+          { title: "Floor", name: "Floor", isDeleted: true },
+          { title: "Paint", name: "Paint", isDeleted: true },
+          { title: "Oven", name: "Oven", isDeleted: true },
+          { title: "Microwave", name: "Microwave", isDeleted: true },
+          { title: "Dishwasher", name: "Dishwasher", isDeleted: true },
+          { title: "Refrigerator", name: "Refrigerator", isDeleted: true },
+          {
+            title: "Garbage Disposal",
+            name: "Garbage Disposal",
+            isDeleted: true,
+          },
+        ];
+
+        setTypeFields(array);
+        break;
+
+      case "Bathroom":
+        array = [
+          { title: "Floor", name: "Floor", isDeleted: true },
+          { title: "Paint", name: "Paint", isDeleted: true },
+          { title: "Lighting/Fan", name: "Lighting/Fan", isDeleted: true },
+          { title: "Sink", name: "Sink", isDeleted: true },
+          { title: "Toilet", name: "Toilet", isDeleted: true },
+          { title: "Shower/Bathtub", name: "Shower/Bathtub", isDeleted: true },
+        ];
+        setTypeFields(array);
+        break;
+
+      default:
+        array = [{ title: "Floor", name: "Floor", isDeleted: true }];
+        setTypeFields(array);
+    }
+  };
+
+  const typeSelectoptions = [
+    {
+      value: "Living Room",
+    },
+    {
+      value: "Bedroom",
+    },
+    {
+      value: "Bonus Room Hallway",
+    },
+    {
+      value: "Office",
+    },
+    {
+      value: "Hallway",
+    },
+    {
+      value: "Kitchen",
+    },
+    {
+      value: "Bathroom ",
+    },
+    {
+      value: "Stairs",
+    },
+    {
+      value: "Garage",
+    },
+
+    {
+      value: "Other",
+    },
+  ];
 
   return (
     <div className="overflow-y-auto h-[80vh]" id="journal-scroll">
-      <Form form={form} layout="vertical">
-        <Form.Item label="Name" name="name">
+      <Form form={form} layout="vertical" requiredMark={false}>
+        <Form.Item label="Name" name="name" rules={[{ required: true }]}>
           <Input placeholder="Name" />
         </Form.Item>
-        <Form.Item label="Type" name="type">
+        <Form.Item label="Type" name="type" rules={[{ required: true }]}>
           <Select
             placeholder="Select a Type"
-            allowClear
-            options={[
-              {
-                value: "livingRoom",
-                label: "Living Room",
-              },
-              {
-                value: "bedroom",
-                label: "Bedroom",
-              },
-              {
-                value: "bonusRoomHallway",
-                label: "Bonus Room Hallway",
-              },
-              {
-                value: "office",
-                label: "Office",
-              },
-              {
-                value: "kitchen",
-                label: "Kitchen",
-              },
-              {
-                value: "bathroom",
-                label: "Bathroom ",
-              },
-              {
-                value: "stairs",
-                label: "Stairs",
-              },
-              {
-                value: "garage",
-                label: "Garage",
-              },
-              {
-                value: "other",
-                label: "Other",
-              },
-            ]}
+            onChange={OnTypeChange}
+            options={typeSelectoptions}
           />
         </Form.Item>
 
-        <RoomDetail form={form} array={first} removeField={removeField} />
+        <RoomDetail
+          form={form}
+          typeFields={typeFields}
+          removeField={removeField}
+        />
 
-        <div className="flex justify-between">
-          <Form.Item name="addFieldName" className="w-full">
-            <Input />
-          </Form.Item>
-          <Button
-            type="primary"
-            icon={<PlusOutlined {...iconProps} />}
-            onClick={addField}
-          >
-            Add field
-          </Button>
-        </div>
+        {!!type && (
+          <div className="flex justify-between gap-4">
+            <Form.Item name="addFieldName" className="w-full">
+              <Input />
+            </Form.Item>
+            <Button
+              type="primary"
+              icon={<PlusOutlined {...iconProps} />}
+              onClick={addField}
+            >
+              Add field
+            </Button>
+          </div>
+        )}
       </Form>
     </div>
   );

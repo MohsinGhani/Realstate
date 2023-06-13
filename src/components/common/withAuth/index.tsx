@@ -27,6 +27,7 @@ const withAuth = (Comp: any) => {
           setUser(jwtToken);
         } else {
           dispatch(logOutUser(router));
+          setUser("pass");
         }
       }
     }, []);

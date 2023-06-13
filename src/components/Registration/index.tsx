@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Space, Steps, message } from "antd";
 import Address from "./tabs/Address";
 import QrCode from "./tabs/QrCode";
@@ -24,7 +24,7 @@ const Registration = () => {
   const [{}, perSendEmail] = useAxo("post", API.RECIEVER_Email);
   const [{}, userDetailsPost] = useAxo("post", API.USER_DETAILS);
 
-  useMemo(() => {
+  useEffect(() => {
     const street = searchParams.get("street");
     const city = searchParams.get("city");
     const state = searchParams.get("state");
@@ -42,7 +42,7 @@ const Registration = () => {
       });
       setCurrent(2);
     }
-  }, [form, searchParams]);
+  }, [searchParams]);
 
   const next = async () => {
     try {

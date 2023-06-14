@@ -1,10 +1,9 @@
 import { login } from "@/services/AuthService";
-import { uselocalstorage } from "@/services/helpers";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppDispatch } from "@/redux/hooks";
 import { addUserDetails } from "@/redux/features/userSlice";
 
 const iconProps = {
@@ -13,9 +12,7 @@ const iconProps = {
 
 const Login = () => {
   const router = useRouter();
-
   const dispatch = useAppDispatch();
-
   const [loading, setLoading] = useState<any>(false);
 
   const onFinish = async (values: any) => {

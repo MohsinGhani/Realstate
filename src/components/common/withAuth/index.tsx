@@ -3,8 +3,9 @@ import Cookies from "js-cookie";
 
 import { isTokenExpire } from "@/services/helpers";
 import { useRouter } from "next/navigation";
-import { addUserDetails, logOutUser } from "@/redux/features/userSlice";
+import { logOutUser } from "@/redux/features/userSlice";
 import { useAppDispatch } from "@/redux/hooks";
+import Loader from "../Loader";
 
 const withAuth = (Comp: any) => {
   function AuthenticatedRoute(props: any) {
@@ -20,10 +21,6 @@ const withAuth = (Comp: any) => {
         );
         const jwtToken = allCookies[getAcceessToken[0]];
         if (jwtToken && !isTokenExpire(jwtToken)) {
-          const getUserId = Object.keys(allCookies || []).filter((k) =>
-            k.includes("LastAuthUser")
-          );
-          dispatch(addUserDetails({ id: allCookies[getUserId[0]] }));
           setUser(jwtToken);
         } else {
           dispatch(logOutUser(router));
@@ -32,7 +29,7 @@ const withAuth = (Comp: any) => {
       }
     }, []);
 
-    return userData === "" ? "loading" : <Comp {...props} />;
+    return userData === "" ? <Loader /> : <Comp {...props} />;
   }
 
   return AuthenticatedRoute;

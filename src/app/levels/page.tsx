@@ -10,15 +10,15 @@ import {
   Form,
   Breadcrumb,
 } from "antd";
-import { useRouter } from "next/navigation";
 import withAuth from "@/components/common/withAuth";
+import { HomeOutlined } from "@ant-design/icons";
 
 import { useAxo } from "../../services/helpers/api";
 import { API } from "../../services/constant";
 import { useAppSelector } from "@/redux/hooks";
+import Link from "next/link";
 
 const LevelsPage = () => {
-  const router = useRouter();
   const [form] = Form.useForm();
   const { user } = useAppSelector((state: any) => state?.userReducer);
 
@@ -28,6 +28,10 @@ const LevelsPage = () => {
   });
 
   const [{ loading, data }, userFloorPost] = useAxo("post", API.USER_FLOORS);
+
+  const iconProps = {
+    rev: undefined,
+  };
 
   useEffect(() => {
     if (user?.id) {
@@ -77,14 +81,7 @@ const LevelsPage = () => {
       dataIndex: "name",
       key: "name",
       render: (_: any, record: any) => (
-        <Space
-          onClick={() => {
-            router.push(`/levels/${record?.id}`);
-          }}
-          className="cursor-pointer"
-        >
-          {record?.name}
-        </Space>
+        <Link href={`/levels/${record?.id}`}>{record?.name}</Link>
       ),
     },
     {
@@ -114,9 +111,24 @@ const LevelsPage = () => {
 
   return (
     <div>
-      <Breadcrumb>
-        <Breadcrumb.Item>Floor</Breadcrumb.Item>
-      </Breadcrumb>
+      <Breadcrumb
+        items={[
+          {
+            title: (
+              <Link href="/">
+                <Space>
+                  <HomeOutlined {...iconProps} />
+                  Home
+                </Space>
+              </Link>
+            ),
+          },
+          {
+            title: "Floor",
+          },
+        ]}
+      />
+
       <div className="flex justify-end mb-4">
         <Button type="primary" onClick={() => handleAddModalOpen(null)}>
           Add Level

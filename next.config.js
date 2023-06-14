@@ -1,11 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["antd"],
-  reactStrictMode: true,
+  reactStrictMode: false,
 
   experimental: {
     appDir: true,
   },
 };
 
-module.exports = nextConfig;
+module.exports = {
+  ...nextConfig,
+};

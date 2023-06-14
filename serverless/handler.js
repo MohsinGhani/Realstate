@@ -5,7 +5,12 @@ const { putUsersInDB } = require("./controller/putUsersInDB");
 const { updateUserDetails } = require("./controller/updateUserDetails");
 const { userFloors } = require("./controller/userFloors");
 const { userRooms } = require("./controller/userRooms");
+const { getUserDetail } = require("./controller/getUserDetail");
 
+module.exports.getUserDetail = async (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+  return getUserDetail(event, context, callback);
+};
 module.exports.userRooms = async (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
   return userRooms(event, context, callback);

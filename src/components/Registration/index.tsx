@@ -11,10 +11,14 @@ import { signup, confirm } from "../../services/AuthService";
 import { useAxo } from "../../services/helpers/api";
 import { API } from "../../services/constant";
 import { useRouter, useSearchParams } from "next/navigation";
+import { addUserDetails } from "@/redux/features/userSlice";
+import { useAppDispatch } from "@/redux/hooks";
 
 const Registration = () => {
   const [form] = Form.useForm();
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
   const searchParams: any = useSearchParams();
   const recieverEmail = searchParams.get("recieverEmail");
 
@@ -22,7 +26,7 @@ const Registration = () => {
   const [laoder, setLaoder] = useState(false);
 
   const [{}, perSendEmail] = useAxo("post", API.RECIEVER_Email);
-  const [{}, userDetailsPost] = useAxo("post", API.USER_DETAILS);
+  const [{}, userDetailsPost] = useAxo("post", API.UPDATE_USER_DETAILS);
 
   useEffect(() => {
     const street = searchParams.get("street");
@@ -58,12 +62,13 @@ const Registration = () => {
       } else if (current == 3) {
         return await confirmEmailHandler(value);
       }
-
       return setCurrent(current + 1);
     } catch (err) {
       console.log("err:", err);
     } finally {
-      setLaoder(false);
+      if (current !== 3) {
+        setLaoder(false);
+      }
     }
   };
 
@@ -107,6 +112,12 @@ const Registration = () => {
         value.password
       );
       await userDetailsPost({ id: res?.confirmedUser?.username, ...value });
+      dispatch(
+        addUserDetails({
+          id: res?.confirmedUser?.username,
+          email: value.email,
+        })
+      );
       router.push("/levels");
     } catch (e: any) {
       message.error(e.message);

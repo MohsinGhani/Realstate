@@ -1,20 +1,16 @@
 import React from "react";
-import { Button, DatePicker, Form, Input, Upload } from "antd";
-import { UploadOutlined, DeleteTwoTone } from "@ant-design/icons";
+import { DatePicker, Form, Input, Space, Upload } from "antd";
+import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
 const iconProps = {
   rev: undefined,
 };
 
-const RoomDetail = ({ typeFields, form, removeField }: any) => {
-  const handleOnRemove: any = async (event: any) => {
-    const value = form.getFieldsValue();
-    const [find]: any = Object.entries(value).find(
-      ([_, value]: any) => value?.file?.uid === event?.uid
-    );
-
-    form.setFieldsValue({
-      [find]: null,
-    });
+const RoomDetail = ({ typeFields, removeField }: any) => {
+  const normFile = (e: any) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
   };
 
   return typeFields?.map(({ title, name, isDeleted }: any, i: any) => (
@@ -52,28 +48,28 @@ const RoomDetail = ({ typeFields, form, removeField }: any) => {
           name={[name, "Picture"]}
           label={`${title} Picture`}
           rules={[{ required: true }]}
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
         >
-          <Upload
-            listType="picture"
-            className="upload-list-inline"
-            maxCount={1}
-            onPreview={() => null}
-          >
-            <Button icon={<UploadOutlined {...iconProps} />}>Upload</Button>
+          <Upload maxCount={1} listType="picture-card" onPreview={() => false}>
+            <Space>
+              <PlusOutlined {...iconProps} />
+              Upload
+            </Space>
           </Upload>
         </Form.Item>
         <Form.Item
           name={[name, "Receipt"]}
           label={`${title} Receipt`}
           rules={[{ required: true }]}
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
         >
-          <Upload
-            listType="picture"
-            className="upload-list-inline"
-            maxCount={1}
-            onPreview={() => null}
-          >
-            <Button icon={<UploadOutlined {...iconProps} />}>Upload</Button>
+          <Upload maxCount={1} listType="picture-card" onPreview={() => false}>
+            <Space>
+              <PlusOutlined {...iconProps} />
+              Upload
+            </Space>
           </Upload>
         </Form.Item>
       </div>

@@ -161,11 +161,7 @@ const AddRoom = ({ form, typeFields, setTypeFields }: any) => {
           />
         </Form.Item>
 
-        <RoomDetail
-          form={form}
-          typeFields={typeFields}
-          removeField={removeField}
-        />
+        <RoomDetail typeFields={typeFields} removeField={removeField} />
 
         {!!type && (
           <div className="flex justify-between gap-4">

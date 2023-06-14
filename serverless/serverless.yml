@@ -61,3 +61,11 @@ functions:
           path: api/userRooms
           method: post
           cors: true
+
+  getUserDetail:
+    handler: handler.getUserDetail
+    events:
+      - http:
+          path: api/getUserDetail
+          method: post
+          cors: true

@@ -18,11 +18,14 @@ import { useAppSelector } from "@/redux/hooks";
 import { putFileToS3 } from "@/services/s3Service";
 import { v4 as uuidv4 } from "uuid";
 import { usePathname } from "next/navigation";
-import moment from "moment";
 import dayjs from "dayjs";
+import Link from "next/link";
+import { HomeOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import { useRouter } from "next/navigation";
 
 const RoomPage = () => {
   const [form] = Form.useForm();
+  const router = useRouter();
   const { user } = useAppSelector((state: any) => state?.userReducer);
   const floorId = usePathname()?.split("/")[2];
 
@@ -34,11 +37,15 @@ const RoomPage = () => {
 
   const [{ loading, data }, userRoomsPost] = useAxo("post", API.USER_ROOMS);
 
+  const iconProps = {
+    rev: undefined,
+  };
+
   useEffect(() => {
     if (user?.id && floorId) {
       userRoomsPost({ floorId });
     }
-  }, [user, floorId]);
+  }, [user?.id, floorId]);
 
   const handleAddModalOpen = (id = null) => {
     setIsModalVisible({ id, modal: true });
@@ -62,8 +69,7 @@ const RoomPage = () => {
   };
 
   const editItem = (item: any) => {
-    const parseData = updateDate(JSON.parse(item?.typeField));
-
+    const parseData = updateData(JSON.parse(item?.typeField));
     setTypeFields(
       Object.keys(parseData)?.map((t: any) => ({
         title: t,
@@ -71,7 +77,6 @@ const RoomPage = () => {
         isDeleted: true,
       }))
     );
-
     form.setFieldsValue({ name: item?.name, type: item.type, ...parseData });
     handleAddModalOpen(item?.id);
   };
@@ -79,7 +84,8 @@ const RoomPage = () => {
   const handleOnFinish = async () => {
     try {
       const { addFieldName, name, type, ...rest } = await form.validateFields();
-      const updatedData = updatePic(rest);
+
+      const updatedData = uploadImages(rest);
 
       await userRoomsPost({
         id: isModalVisible?.id,
@@ -131,12 +137,34 @@ const RoomPage = () => {
 
   return (
     <div>
-      <Breadcrumb>
-        <Breadcrumb.Item href="/levels">Floor</Breadcrumb.Item>
-        <Breadcrumb.Item>Room</Breadcrumb.Item>
-      </Breadcrumb>
+      <Breadcrumb
+        items={[
+          {
+            title: (
+              <Link href="/">
+                <Space>
+                  <HomeOutlined {...iconProps} />
+                  Home
+                </Space>
+              </Link>
+            ),
+          },
+          {
+            title: <Link href="/levels">Floor</Link>,
+          },
+          {
+            title: "Room",
+          },
+        ]}
+      />
 
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-between my-4">
+        <Button
+          onClick={() => router.push("/levels")}
+          icon={<ArrowLeftOutlined {...iconProps} />}
+        >
+          Back
+        </Button>
         <Button
           type="primary"
           onClick={() => handleAddModalOpen(null)}
@@ -188,20 +216,28 @@ const RoomPage = () => {
 
 export default withAuth(RoomPage);
 
-const updatePic = (data: any) => {
-  let updatedData = { ...data };
+const uploadImages = (data: any) => {
+  const updatedData = { ...data };
+
   for (const key in updatedData) {
     if (updatedData.hasOwnProperty(key)) {
-      if (updatedData[key].Picture?.file?.originFileObj) {
+      const picture = updatedData[key].Picture?.[0];
+      const receipt = updatedData[key].Receipt?.[0];
+
+      if (picture?.originFileObj) {
         const keyPicture = `ROOMS/${uuidv4()}.webp`;
-        putFileToS3(keyPicture, updatedData[key].Picture?.file?.originFileObj);
         updatedData[key].Picture = keyPicture;
+        putFileToS3(keyPicture, picture.originFileObj);
+      } else {
+        updatedData[key].Picture = picture?.name;
       }
 
-      if (updatedData[key].Receipt?.file?.originFileObj) {
+      if (receipt?.originFileObj) {
         const keyReceipt = `ROOMS/${uuidv4()}.webp`;
-        putFileToS3(keyReceipt, updatedData[key].Receipt?.file?.originFileObj);
         updatedData[key].Receipt = keyReceipt;
+        putFileToS3(keyReceipt, receipt.originFileObj);
+      } else {
+        updatedData[key].Receipt = receipt?.name;
       }
     }
   }
@@ -209,14 +245,28 @@ const updatePic = (data: any) => {
   return updatedData;
 };
 
-const updateDate = (data: any) => {
-  let updatedData = { ...data };
-
-  for (const key in updatedData) {
-    if (updatedData.hasOwnProperty(key)) {
-      updatedData[key].InstallDate = dayjs(updatedData[key].InstallDate);
-    }
-  }
-
-  return updatedData;
+const updateData = (data: any) => {
+  return Object.entries(data).reduce((acc: any, [key, value]: any) => {
+    acc[key] = {
+      ...value,
+      InstallDate: dayjs(value.InstallDate),
+      Picture: [
+        {
+          uid: "-1",
+          name: `${value.Picture}`,
+          status: "done",
+          url: `https://real-estate-1.s3.us-east-2.amazonaws.com/${value.Picture}`,
+        },
+      ],
+      Receipt: [
+        {
+          uid: "-1",
+          name: `${value.Receipt}`,
+          status: "done",
+          url: `https://real-estate-1.s3.us-east-2.amazonaws.com/${value.Receipt}`,
+        },
+      ],
+    };
+    return acc;
+  }, {});
 };

@@ -1,15 +1,49 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Space } from "antd";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { logOutUser } from "@/redux/features/userSlice";
+import { addUserDetails, logOutUser } from "@/redux/features/userSlice";
+import Cookies from "js-cookie";
+import { isTokenExpire } from "@/services/helpers";
+import { useAxo } from "@/services/helpers/api";
+import { API } from "@/services/constant";
 
 const Header = () => {
   const router = useRouter();
   const { user } = useAppSelector((state: any) => state?.userReducer);
   const dispatch = useAppDispatch();
+  const [{}, userDetailsPost] = useAxo("post", API.USER_DETAILS);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const allCookies = Cookies.get();
+      if (allCookies) {
+        const getAcceessToken = Object.keys(allCookies || []).filter((k) =>
+          k.includes("accessToken")
+        );
+        const jwtToken = allCookies[getAcceessToken[0]];
+        if (jwtToken && !isTokenExpire(jwtToken)) {
+          const getUserId = Object.keys(allCookies || []).filter((k) =>
+            k.includes("LastAuthUser")
+          );
+
+          const res: any = await userDetailsPost({
+            userId: allCookies[getUserId[0]],
+          });
+
+          dispatch(
+            addUserDetails({
+              id: allCookies[getUserId[0]],
+              email: res?.[0]?.email,
+            })
+          );
+        }
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="block w-full shadow-md backdrop-saturate-200 backdrop-blur-2xl bg-opacity-80 border border-white/80 bg-white sticky inset-0 h-max max-w-full rounded py-2 px-4 lg:px-8 lg:py-4 mb-8 z-50">

@@ -1,7 +1,6 @@
-import { Form, Input, Typography } from "antd";
+import { Form, Input, QRCode, Typography } from "antd";
 import React from "react";
 import { FormInstance } from "antd/lib/form";
-import QRCode from "qrcode.react";
 
 interface QrCode {
   form: FormInstance;
@@ -12,7 +11,7 @@ const QrCode: React.FC<QrCode> = ({ form, required, isEditable }) => {
   const value = form.getFieldsValue();
   let link: any = "";
   if (typeof window !== "undefined") {
-    link = `${window?.location?.origin}/registration?street=${value?.street}&city=${value?.city}&state=${value?.state}&zipCode=${value?.zipCode}&contractorCode=${value?.contractorCode}`;
+    link = `${window?.location?.origin}/registration?street=${value?.street}&city=${value?.city}&state=${value?.state}&zipCode=${value?.zipCode}&contractorCode=${value?.contractorCode}&recieverEmail=${value?.recieverEmail}`;
   }
 
   return (
@@ -21,12 +20,7 @@ const QrCode: React.FC<QrCode> = ({ form, required, isEditable }) => {
         Address
       </Typography>
       <div className="flex justify-center items-center mb-8">
-        <QRCode
-          value={link}
-          size={250}
-          bgColor={"#ffffff"}
-          fgColor={"#000000"}
-        />
+        <QRCode value={link || "-"} size={250} />
       </div>
       <Typography className="text-left text-2xl mb-6 font-medium">
         Reciever Email

@@ -18,33 +18,40 @@ const Registration = () => {
   const [form] = Form.useForm();
   const router = useRouter();
   const dispatch = useAppDispatch();
-
   const searchParams: any = useSearchParams();
-  const recieverEmail = searchParams.get("recieverEmail");
 
   const [current, setCurrent] = useState(0);
   const [laoder, setLaoder] = useState(false);
 
   const [{}, perSendEmail] = useAxo("post", API.RECIEVER_Email);
   const [{}, userDetailsPost] = useAxo("post", API.UPDATE_USER_DETAILS);
+  const [{}, getuserDetailsPost] = useAxo("post", API.USER_DETAILS);
+
+  const recieverEmail = searchParams.get("recieverEmail");
 
   useEffect(() => {
-    const street = searchParams.get("street");
-    const city = searchParams.get("city");
-    const state = searchParams.get("state");
-    const zipCode = searchParams.get("zipCode");
-    const contractorCode = searchParams.get("contractorCode");
+    const paramsToSet = [
+      "street",
+      "city",
+      "state",
+      "zipCode",
+      "contractorCode",
+    ];
+    const valuesToSet: any = {};
 
-    if (!!recieverEmail) {
-      form.setFieldsValue({
-        street,
-        city,
-        state,
-        zipCode,
-        contractorCode,
-        recieverEmail,
-      });
-      setCurrent(2);
+    paramsToSet.forEach((param) => {
+      const value = searchParams.get(param);
+      if (!!value) valuesToSet[param] = value;
+    });
+
+    if (Object.keys(valuesToSet).length > 0) {
+      if (!!recieverEmail) {
+        valuesToSet.recieverEmail = recieverEmail;
+        setCurrent(2);
+      } else {
+        setCurrent(1);
+      }
+      form.setFieldsValue(valuesToSet);
     }
   }, [searchParams]);
 
@@ -112,13 +119,17 @@ const Registration = () => {
         value.password
       );
       await userDetailsPost({ id: res?.confirmedUser?.username, ...value });
+
+      const userData: any = await getuserDetailsPost({
+        userId: res?.confirmedUser?.username,
+      });
+
       dispatch(
         addUserDetails({
-          id: res?.confirmedUser?.username,
-          email: value.email,
+          ...userData?.[0],
         })
       );
-      router.push("/levels");
+      router.push("/");
     } catch (e: any) {
       message.error(e.message);
       throw new Error(e);

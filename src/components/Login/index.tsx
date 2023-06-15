@@ -25,7 +25,7 @@ const Login = () => {
           email: res?.attributes?.email,
         })
       );
-      router.push("/levels");
+      router.push("/");
     } catch (e: any) {
       message.error(e.message);
       setLoading(false);

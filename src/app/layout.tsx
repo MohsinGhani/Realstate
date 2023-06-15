@@ -19,7 +19,7 @@ export default function RootLayout({
       <body>
         <Providers>
           <Header />
-          <div className="max-w-[1080px] mx-auto">{children}</div>
+          <div className="max-w-[1080px] mx-auto px-4 lg:px-8">{children}</div>
         </Providers>
       </body>
     </html>

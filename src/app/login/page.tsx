@@ -11,7 +11,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (user?.id) {
-      router.push("/levels");
+      router.push("/");
     }
   }, [user?.id]);
 

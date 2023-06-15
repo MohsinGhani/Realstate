@@ -8,7 +8,7 @@ const API = {
   UPDATE_USER_DETAILS: `${baseUrl}/${currentEnv}/api/updateUserDetails`,
   USER_FLOORS: `${baseUrl}/${currentEnv}/api/userFloors`,
   USER_ROOMS: `${baseUrl}/${currentEnv}/api/userRooms`,
-  USER_DETAILS: `${baseUrl}/${currentEnv}/api/getUserDetail`,
+  USER_DETAILS: `${baseUrl}/${currentEnv}/api/userDetail`,
 };
 
 export { API, currentEnv };

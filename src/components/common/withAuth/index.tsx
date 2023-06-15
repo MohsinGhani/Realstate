@@ -19,12 +19,12 @@ const withAuth = (Comp: any) => {
         const getAcceessToken = Object.keys(allCookies || []).filter((k) =>
           k.includes("accessToken")
         );
+
         const jwtToken = allCookies[getAcceessToken[0]];
         if (jwtToken && !isTokenExpire(jwtToken)) {
           setUser(jwtToken);
         } else {
           dispatch(logOutUser(router));
-          setUser("pass");
         }
       }
     }, []);

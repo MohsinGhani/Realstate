@@ -1,13 +1,8 @@
 import { logout } from "@/services/AuthService";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type user = {
-  id: number | null;
-  email: string | null;
-};
-
 type State = {
-  user?: user;
+  user?: any;
 };
 
 const initialState: State = {

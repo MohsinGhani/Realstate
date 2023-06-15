@@ -2,10 +2,15 @@ import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
 
 const isTokenExpire = (token: any) => {
-  const decode: any = jwt_decode(token);
-  if (Date.now() >= decode.exp * 1000) {
-    return true;
-  } else {
+  try {
+    const decode: any = jwt_decode(token);
+    if (Date.now() >= decode.exp * 1000) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    console.log("e:", e);
     return false;
   }
 };

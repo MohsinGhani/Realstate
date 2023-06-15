@@ -4,7 +4,9 @@ import { Button, Form, Input, message } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useAppDispatch } from "@/redux/hooks";
-import { addUserDetails } from "@/redux/features/userSlice";
+import { fetchUserData } from "@/services/helpers";
+import { useAxo } from "@/services/helpers/api";
+import { API } from "@/services/constant";
 
 const iconProps = {
   rev: undefined,
@@ -14,17 +16,13 @@ const Login = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState<any>(false);
+  const [{}, userDetailsPost] = useAxo("post", API.USER_DETAILS);
 
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
-      const res: any = await login(values?.username, values?.password);
-      dispatch(
-        addUserDetails({
-          id: res?.username,
-          email: res?.attributes?.email,
-        })
-      );
+      await login(values?.username, values?.password);
+      fetchUserData(userDetailsPost, dispatch);
       router.push("/");
     } catch (e: any) {
       message.error(e.message);

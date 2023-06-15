@@ -4,9 +4,8 @@ import React, { useEffect } from "react";
 import { Button, Space } from "antd";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { addUserDetails, logOutUser } from "@/redux/features/userSlice";
-import Cookies from "js-cookie";
-import { isTokenExpire } from "@/services/helpers";
+import { logOutUser } from "@/redux/features/userSlice";
+import { fetchUserData } from "@/services/helpers";
 import { useAxo } from "@/services/helpers/api";
 import { API } from "@/services/constant";
 
@@ -17,31 +16,7 @@ const Header = () => {
   const [{}, userDetailsPost] = useAxo("post", API.USER_DETAILS);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const allCookies = Cookies.get();
-      if (allCookies) {
-        const getAcceessToken = Object.keys(allCookies || []).filter((k) =>
-          k.includes("accessToken")
-        );
-        const jwtToken = allCookies[getAcceessToken[0]];
-        if (jwtToken && !isTokenExpire(jwtToken)) {
-          const getUserId = Object.keys(allCookies || []).filter((k) =>
-            k.includes("LastAuthUser")
-          );
-
-          const res: any = await userDetailsPost({
-            userId: allCookies[getUserId[0]],
-          });
-
-          dispatch(
-            addUserDetails({
-              ...res?.[0],
-            })
-          );
-        }
-      }
-    };
-    fetchData();
+    fetchUserData(userDetailsPost, dispatch);
   }, []);
 
   return (

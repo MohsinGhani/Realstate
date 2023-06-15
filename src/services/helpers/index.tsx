@@ -1,5 +1,6 @@
 import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
+import { addUserDetails } from "@/redux/features/userSlice";
 
 const isTokenExpire = (token: any) => {
   try {
@@ -33,4 +34,29 @@ const getUserId = () => {
   }
 };
 
-export { isTokenExpire, uselocalstorage, getUserId };
+const fetchUserData = async (userDetailsPost: any, dispatch: any) => {
+  const allCookies = Cookies.get();
+  if (allCookies) {
+    const getAcceessToken = Object.keys(allCookies || []).filter((k) =>
+      k.includes("accessToken")
+    );
+    const jwtToken = allCookies[getAcceessToken[0]];
+    if (jwtToken && !isTokenExpire(jwtToken)) {
+      const getUserId = Object.keys(allCookies || []).filter((k) =>
+        k.includes("LastAuthUser")
+      );
+
+      const res: any = await userDetailsPost({
+        userId: allCookies[getUserId[0]],
+      });
+
+      dispatch(
+        addUserDetails({
+          ...res?.[0],
+        })
+      );
+    }
+  }
+};
+
+export { isTokenExpire, uselocalstorage, getUserId, fetchUserData };

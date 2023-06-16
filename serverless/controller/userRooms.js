@@ -19,6 +19,7 @@ async function userRooms(event, context, callback) {
           name: params.name,
           type: params.type,
           typeField: params.typeField,
+          createdAt: new Date().getTime(),
         },
       };
 

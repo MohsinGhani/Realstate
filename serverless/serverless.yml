@@ -38,14 +38,6 @@ functions:
           method: post
           cors: true
 
-  updateUserDetails:
-    handler: handler.updateUserDetails
-    events:
-      - http:
-          path: api/updateUserDetails
-          method: post
-          cors: true
-
   userFloors:
     handler: handler.userFloors
     events:

@@ -14,7 +14,7 @@ const EditUserDetails = ({ user, handleCancel, open }: any) => {
   const [{ loading }, userDetailsPost] = useAxo("post", API.USER_DETAILS);
 
   useEffect(() => {
-    if (user?.image) {
+    if (user) {
       form.setFieldsValue({ ...user });
     }
   }, [open]);

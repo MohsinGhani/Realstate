@@ -16,6 +16,7 @@ async function userFloors(event, context, callback) {
           id: uuidv4(),
           createdBy: params.userId,
           name: params.name,
+          createdAt: new Date().getTime(),
         },
       };
 

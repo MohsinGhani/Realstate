@@ -1,4 +1,4 @@
-const { getItemByQuery } = require("../lib/helper");
+const { getItemByQuery, upDateItemByQuery } = require("../lib/helper");
 const aws = require("aws-sdk");
 const ddb = new aws.DynamoDB.DocumentClient({});
 
@@ -9,36 +9,23 @@ async function userDetail(event, context, callback) {
   try {
     // for update Data
     if (!!params.id) {
-      const updateParams = {
-        TableName: "realEstate-users",
-        Key: { id: params.id },
-        UpdateExpression: "SET",
-        ExpressionAttributeNames: {},
-        ExpressionAttributeValues: {},
-      };
-
       const updateValues = { ...params };
 
-      delete updateValues.id;
-      delete updateValues.userId;
+      const fieldsToDelete = [
+        "id",
+        "userId",
+        "confirm",
+        "confirmationCode",
+        "password",
+      ];
 
-      Object.entries(updateValues).forEach(([key, value]) => {
-        if (key !== "id" && value) {
-          const expressionName = `#${key}`;
-          const expressionValue = `:${key}`;
+      fieldsToDelete.forEach((field) => delete updateValues[field]);
 
-          updateParams.UpdateExpression += ` ${expressionName} = ${expressionValue},`;
-          updateParams.ExpressionAttributeNames[expressionName] = key;
-          updateParams.ExpressionAttributeValues[expressionValue] = value;
-        }
+      await upDateItemByQuery({
+        TableName: "realEstate-users",
+        keyId: params.id,
+        params: updateValues,
       });
-
-      updateParams.UpdateExpression = updateParams.UpdateExpression.slice(
-        0,
-        -1
-      );
-
-      await ddb.update(updateParams).promise();
     }
 
     // for get Data

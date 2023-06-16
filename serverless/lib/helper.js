@@ -54,8 +54,36 @@ const getItemByQuery = ({
   return ddb.query(params).promise();
 };
 
+const upDateItemByQuery = ({ TableName, keyId, params }) => {
+  const updateParams = {
+    TableName: TableName,
+    Key: { id: keyId },
+    UpdateExpression: "SET",
+    ExpressionAttributeNames: {},
+    ExpressionAttributeValues: {},
+  };
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) {
+      const expressionName = `#${key}`;
+      const expressionValue = `:${key}`;
+
+      updateParams.UpdateExpression += ` ${expressionName} = ${expressionValue},`;
+      updateParams.ExpressionAttributeNames[expressionName] = key;
+      updateParams.ExpressionAttributeValues[expressionValue] = value;
+    }
+  });
+
+  updateParams.UpdateExpression = updateParams.UpdateExpression.slice(0, -1);
+
+  console.log("🚀  updateParams:", updateParams);
+
+  return ddb.update(updateParams).promise();
+};
+
 module.exports = {
   generateId,
   getUniqueItemFromArr,
   getItemByQuery,
+  upDateItemByQuery,
 };

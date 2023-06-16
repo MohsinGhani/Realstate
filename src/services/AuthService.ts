@@ -64,8 +64,8 @@ export const logout = () => {
     try {
       await Auth.signOut({ global: true });
       resolve(true);
-    } catch (error) {
-      reject(error);
+    } catch (error: any) {
+      reject(error.message);
     }
   });
 };

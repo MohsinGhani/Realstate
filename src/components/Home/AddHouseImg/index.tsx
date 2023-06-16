@@ -6,6 +6,8 @@ import { PlusOutlined } from "@ant-design/icons";
 import { putFileToS3 } from "@/services/s3Service";
 import { useAxo } from "@/services/helpers/api";
 import { API } from "@/services/constant";
+import { useAppDispatch } from "@/redux/hooks";
+import { addUserDetails } from "@/redux/features/userSlice";
 
 const iconProps = {
   rev: undefined,
@@ -15,6 +17,7 @@ const AddHouseImg = ({ user, handleCancel, open }: any) => {
   const [form] = Form.useForm();
   const [{}, userDetailsPost] = useAxo("post", API.USER_DETAILS);
   const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
 
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
@@ -47,11 +50,20 @@ const AddHouseImg = ({ user, handleCancel, open }: any) => {
       const keyPicture = `HOME/${user?.id}.webp`;
 
       await putFileToS3(keyPicture, value?.houseImg?.[0]?.originFileObj);
-      await userDetailsPost({
-        id: user?.id,
-        userId: user?.id,
-        image: keyPicture,
-      });
+
+      if (!user?.image) {
+        const res = await userDetailsPost({
+          id: user?.id,
+          userId: user?.id,
+          image: keyPicture,
+        });
+        dispatch(
+          addUserDetails({
+            ...res?.[0],
+          })
+        );
+      }
+
       handleCancel();
     } catch (error) {
       console.log("error:", error);

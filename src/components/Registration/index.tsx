@@ -24,7 +24,6 @@ const Registration = () => {
   const [laoder, setLaoder] = useState(false);
 
   const [{}, perSendEmail] = useAxo("post", API.RECIEVER_Email);
-  const [{}, userDetailsPost] = useAxo("post", API.UPDATE_USER_DETAILS);
   const [{}, getuserDetailsPost] = useAxo("post", API.USER_DETAILS);
 
   const recieverEmail = searchParams.get("recieverEmail");
@@ -118,10 +117,11 @@ const Registration = () => {
         value.confirmationCode,
         value.password
       );
-      await userDetailsPost({ id: res?.confirmedUser?.username, ...value });
 
       const userData: any = await getuserDetailsPost({
+        id: res?.confirmedUser?.username,
         userId: res?.confirmedUser?.username,
+        ...value,
       });
 
       dispatch(

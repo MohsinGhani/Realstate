@@ -4,7 +4,12 @@ import React from "react";
 import { Form, Input, Select } from "antd";
 import ExteriorDetail from "./ExteriorDetail";
 
-const AddExterior = ({ form, typeFields, setTypeFields }: any) => {
+const AddExterior = ({
+  form,
+  typeFields,
+  setTypeFields,
+  deletePhotes,
+}: any) => {
   const removeField = (value: any) => {
     let myArray = typeFields;
     myArray = myArray.filter((obj: any) => obj.name != value);
@@ -77,7 +82,11 @@ const AddExterior = ({ form, typeFields, setTypeFields }: any) => {
           />
         </Form.Item>
 
-        <ExteriorDetail typeFields={typeFields} removeField={removeField} />
+        <ExteriorDetail
+          typeFields={typeFields}
+          removeField={removeField}
+          deletePhotes={deletePhotes}
+        />
       </Form>
     </div>
   );

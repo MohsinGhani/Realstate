@@ -22,21 +22,15 @@ const putFileToS3 = (
   });
 };
 
-// const removeFileToS3 = (
-//   key,
-//   contentType = "image/*",
-//   customPrefix = defaultPrefix
-// ) => {
-//   return new Promise((resolve, reject) => {
-//     Storage.remove(key, {
-//       customPrefix,
-//       contentType,
-//     })
-
-//       .then(() => resolve())
-//       .catch((error) => reject(error));
-//   });
-// };
+const removeFileToS3 = (key: any, customPrefix: any = defaultPrefix) => {
+  return new Promise((resolve: any, reject: any) => {
+    Storage.remove(key, {
+      customPrefix,
+    })
+      .then(() => resolve())
+      .catch((error) => reject(error));
+  });
+};
 
 // const generatePreSignedGetUrl = async (
 //   key,
@@ -102,7 +96,7 @@ const putFileToS3 = (
 
 export {
   putFileToS3,
-  // removeFileToS3,
+  removeFileToS3,
   // generatePreSignedGetUrl,
   // getBase64FromS3Key,
   // downloadCsvFromS3,

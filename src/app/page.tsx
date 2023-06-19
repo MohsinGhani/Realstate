@@ -6,10 +6,10 @@ import { Button, Descriptions, Input, QRCode, Tabs, Typography } from "antd";
 import { useRouter } from "next/navigation";
 import withAuth from "@/components/common/withAuth";
 import { useAppSelector } from "@/redux/hooks";
-import AddHouseImg from "@/components/Home/AddHouseImg";
-import EditUserDetails from "@/components/Home/EditUserDetails";
-import Exterior from "@/components/Home/Exterior";
-import Interior from "@/components/Home/Interior";
+import AddHouseImg from "@/components/LandingPage/AddHouseImg";
+import EditUserDetails from "@/components/LandingPage/EditUserDetails";
+import Exterior from "@/components/LandingPage/Exterior";
+import Interior from "@/components/LandingPage/Interior";
 
 const HomePage = () => {
   const { user } = useAppSelector((state: any) => state?.userReducer);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Table,
   Button,
@@ -15,7 +15,7 @@ import withAuth from "@/components/common/withAuth";
 import { useAxo } from "../../services/helpers/api";
 import { API } from "../../services/constant";
 import { useAppSelector } from "@/redux/hooks";
-import { putFileToS3 } from "@/services/s3Service";
+import { putFileToS3, removeFileToS3 } from "@/services/s3Service";
 import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
 import Link from "next/link";
@@ -30,6 +30,7 @@ const ExteriorPage = () => {
   const [form] = Form.useForm();
   const router = useRouter();
   const { user } = useAppSelector((state: any) => state?.userReducer);
+  const deletePhotes = useRef([]);
 
   const [typeFields, setTypeFields] = useState<any>([]);
   const [isModalVisible, setIsModalVisible] = useState({
@@ -58,12 +59,22 @@ const ExteriorPage = () => {
     if (reset) {
       form.resetFields();
       setTypeFields([]);
+      deletePhotes.current = [];
     }
   };
 
   const deleteItem = async (item: any) => {
+    let images = JSON.parse(item?.typeField);
+    images = [...images?.Roof?.ProjectPhotos, ...images?.Roof?.WarrantyPhotos];
+
     try {
       await userExteriorPost({ userId: user?.id, deleteId: item?.id });
+
+      if (!!images.length) {
+        images?.forEach((t: any) => {
+          removeFileToS3(t);
+        });
+      }
     } catch (err) {
       console.log("err:", err);
     }
@@ -87,6 +98,12 @@ const ExteriorPage = () => {
       const { name, type, ...rest } = await form.validateFields();
 
       const updatedData = uploadImages(rest);
+
+      if (!!deletePhotes.current.length) {
+        deletePhotes.current?.forEach((t: any) => {
+          removeFileToS3(t);
+        });
+      }
 
       const payload = {
         id: isModalVisible?.id,
@@ -206,6 +223,7 @@ const ExteriorPage = () => {
           form={form}
           typeFields={typeFields}
           setTypeFields={setTypeFields}
+          deletePhotes={deletePhotes}
         />
       </Modal>
     </div>

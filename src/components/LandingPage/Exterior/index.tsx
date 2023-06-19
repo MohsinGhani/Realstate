@@ -15,8 +15,6 @@ const Exterior = () => {
     API.USER_EXTERIOR
   );
 
-  console.log("🚀  data:", data);
-
   useEffect(() => {
     if (user?.id) {
       userExteriorPost({ userId: user?.id });

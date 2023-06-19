@@ -5,12 +5,18 @@ const iconProps = {
   rev: undefined,
 };
 
-const ExteriorDetail = ({ typeFields, removeField }: any) => {
+const ExteriorDetail = ({ typeFields, removeField, deletePhotes }: any) => {
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
       return e;
     }
     return e?.fileList;
+  };
+
+  const onRemoveHandler = (e: any) => {
+    if (!e?.originFileObj) {
+      deletePhotes.current.push(e.uid);
+    }
   };
 
   return typeFields?.map(({ title, name, isDeleted }: any, i: any) => (
@@ -115,7 +121,12 @@ const ExteriorDetail = ({ typeFields, removeField }: any) => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload maxCount={3} listType="picture-card" onPreview={() => false}>
+          <Upload
+            maxCount={3}
+            listType="picture-card"
+            onPreview={() => false}
+            onRemove={onRemoveHandler}
+          >
             <Space>
               <PlusOutlined {...iconProps} />
               Upload
@@ -130,7 +141,12 @@ const ExteriorDetail = ({ typeFields, removeField }: any) => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload maxCount={3} listType="picture-card" onPreview={() => false}>
+          <Upload
+            maxCount={3}
+            listType="picture-card"
+            onPreview={() => false}
+            onRemove={onRemoveHandler}
+          >
             <Space>
               <PlusOutlined {...iconProps} />
               Upload

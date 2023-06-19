@@ -5,34 +5,28 @@ import { useAxo } from "@/services/helpers/api";
 import { useAppSelector } from "@/redux/hooks";
 import { Button, Table } from "antd";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-const Exterior = () => {
+const Interior = () => {
   const router = useRouter();
   const { user } = useAppSelector((state: any) => state?.userReducer);
 
-  const [{ loading, data }, userExteriorPost] = useAxo(
-    "post",
-    API.USER_EXTERIOR
-  );
-
-  console.log("🚀  data:", data);
+  const [{ loading, data }, userFloorPost] = useAxo("post", API.USER_FLOORS);
 
   useEffect(() => {
     if (user?.id) {
-      userExteriorPost({ userId: user?.id });
+      userFloorPost({ userId: user?.id });
     }
   }, [user?.id]);
 
   const columns: any = [
     {
-      title: "Rooms",
+      title: <span className="font-extrabold text-18">House Levels</span>,
       dataIndex: "name",
       key: "name",
-    },
-    {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
+      render: (_: any, record: any) => (
+        <Link href={`/levels/${record?.id}`}>{record?.name}</Link>
+      ),
     },
   ];
 
@@ -42,11 +36,11 @@ const Exterior = () => {
         <Button
           type="primary"
           onClick={() => {
-            router.push("/exterior");
+            router.push("/levels");
           }}
           disabled={loading}
         >
-          Add Exterior
+          Add Interior
         </Button>
       </div>
       <Table
@@ -58,4 +52,4 @@ const Exterior = () => {
   );
 };
 
-export default Exterior;
+export default Interior;

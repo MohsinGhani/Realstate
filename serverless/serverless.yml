@@ -61,3 +61,11 @@ functions:
           path: api/userDetail
           method: post
           cors: true
+
+  userExterior:
+    handler: handler.userExterior
+    events:
+      - http:
+          path: api/userExterior
+          method: post
+          cors: true

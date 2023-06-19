@@ -9,6 +9,7 @@ import { useAppSelector } from "@/redux/hooks";
 import AddHouseImg from "@/components/Home/AddHouseImg";
 import EditUserDetails from "@/components/Home/EditUserDetails";
 import Exterior from "@/components/Home/Exterior";
+import Interior from "@/components/Home/Interior";
 
 const HomePage = () => {
   const { user } = useAppSelector((state: any) => state?.userReducer);
@@ -39,7 +40,7 @@ const HomePage = () => {
     {
       key: "2",
       label: `Interior`,
-      children: `Content of Tab Pane 2`,
+      children: <Interior />,
     },
     {
       key: "3",

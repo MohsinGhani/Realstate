@@ -1,13 +1,14 @@
 const Credentials = {
   cognito: {
-    userPoolId: "us-east-2_mTgRNMQTv",
-    identityPoolId: "us-east-2:574f612f-d527-4bb9-a269-ea9321f76c05",
-    userPoolWebClientId: "64pi1009bergt61j6dnvgq53r5",
+    userPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID,
+    identityPoolId: process.env.NEXT_PUBLIC_COGNITO_IDENTITY_POOL_ID,
+    userPoolWebClientId:
+      process.env.NEXT_PUBLIC_COGNITO_USER_POOL_WEB_CLIENT_ID,
     region: "us-east-2",
   },
 
   S3: {
-    bucket: "real-estate-1",
+    bucket: process.env.NEXT_PUBLIC_S3_BUCKET,
   },
 };
 

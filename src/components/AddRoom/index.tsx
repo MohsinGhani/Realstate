@@ -9,7 +9,7 @@ const iconProps = {
   rev: undefined,
 };
 
-const AddRoom = ({ form, typeFields, setTypeFields }: any) => {
+const AddRoom = ({ form, typeFields, setTypeFields, deletePhotes }: any) => {
   const type = Form.useWatch("type", form);
 
   const addField = () => {
@@ -25,10 +25,7 @@ const AddRoom = ({ form, typeFields, setTypeFields }: any) => {
       );
 
       if (!findValue?.name) {
-        setTypeFields([
-          ...typeFields,
-          { title: value, name: value, isDeleted: true },
-        ]);
+        setTypeFields([...typeFields, { title: value, name: value }]);
         form.setFieldsValue({
           addFieldName: undefined,
         });
@@ -58,18 +55,18 @@ const AddRoom = ({ form, typeFields, setTypeFields }: any) => {
       case "Stairs":
       case "Other":
         array = [
-          { title: "Floor", name: "Floor", isDeleted: true },
-          { title: "Paint", name: "Paint", isDeleted: true },
-          { title: "Lighting/Fan", name: "Lighting/Fan", isDeleted: true },
+          { title: "Floor", name: "Floor" },
+          { title: "Paint", name: "Paint" },
+          { title: "Lighting/Fan", name: "Lighting/Fan" },
         ];
         setTypeFields(array);
         break;
 
       case "Garage":
         array = [
-          { title: "Garage Door", name: "Garage Door", isDeleted: true },
-          { title: "Lighting", name: "Lighting", isDeleted: true },
-          { title: "Paint", name: "Paint", isDeleted: true },
+          { title: "Garage Door", name: "Garage Door" },
+          { title: "Lighting", name: "Lighting" },
+          { title: "Paint", name: "Paint" },
         ];
 
         setTypeFields(array);
@@ -77,18 +74,17 @@ const AddRoom = ({ form, typeFields, setTypeFields }: any) => {
 
       case "Kitchen":
         array = [
-          { title: "Countertops", name: "Countertops", isDeleted: true },
-          { title: "Lighting", name: "Lighting", isDeleted: true },
-          { title: "Floor", name: "Floor", isDeleted: true },
-          { title: "Paint", name: "Paint", isDeleted: true },
-          { title: "Oven", name: "Oven", isDeleted: true },
-          { title: "Microwave", name: "Microwave", isDeleted: true },
-          { title: "Dishwasher", name: "Dishwasher", isDeleted: true },
-          { title: "Refrigerator", name: "Refrigerator", isDeleted: true },
+          { title: "Countertops", name: "Countertops" },
+          { title: "Lighting", name: "Lighting" },
+          { title: "Floor", name: "Floor" },
+          { title: "Paint", name: "Paint" },
+          { title: "Oven", name: "Oven" },
+          { title: "Microwave", name: "Microwave" },
+          { title: "Dishwasher", name: "Dishwasher" },
+          { title: "Refrigerator", name: "Refrigerator" },
           {
             title: "Garbage Disposal",
             name: "Garbage Disposal",
-            isDeleted: true,
           },
         ];
 
@@ -97,18 +93,18 @@ const AddRoom = ({ form, typeFields, setTypeFields }: any) => {
 
       case "Bathroom":
         array = [
-          { title: "Floor", name: "Floor", isDeleted: true },
-          { title: "Paint", name: "Paint", isDeleted: true },
-          { title: "Lighting/Fan", name: "Lighting/Fan", isDeleted: true },
-          { title: "Sink", name: "Sink", isDeleted: true },
-          { title: "Toilet", name: "Toilet", isDeleted: true },
-          { title: "Shower/Bathtub", name: "Shower/Bathtub", isDeleted: true },
+          { title: "Floor", name: "Floor" },
+          { title: "Paint", name: "Paint" },
+          { title: "Lighting/Fan", name: "Lighting/Fan" },
+          { title: "Sink", name: "Sink" },
+          { title: "Toilet", name: "Toilet" },
+          { title: "Shower/Bathtub", name: "Shower/Bathtub" },
         ];
         setTypeFields(array);
         break;
 
       default:
-        array = [{ title: "Floor", name: "Floor", isDeleted: true }];
+        array = [{ title: "Floor", name: "Floor" }];
         setTypeFields(array);
     }
   };
@@ -161,7 +157,11 @@ const AddRoom = ({ form, typeFields, setTypeFields }: any) => {
           />
         </Form.Item>
 
-        <RoomDetail typeFields={typeFields} removeField={removeField} />
+        <RoomDetail
+          typeFields={typeFields}
+          removeField={removeField}
+          deletePhotes={deletePhotes}
+        />
 
         {!!type && (
           <div className="flex justify-between gap-4">

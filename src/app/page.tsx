@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-
 import { Button, Descriptions, Input, QRCode, Tabs, Typography } from "antd";
-import { useRouter } from "next/navigation";
 import withAuth from "@/components/common/withAuth";
 import { useAppSelector } from "@/redux/hooks";
 import AddHouseImg from "@/components/LandingPage/AddHouseImg";
@@ -13,7 +11,6 @@ import Interior from "@/components/LandingPage/Interior";
 
 const HomePage = () => {
   const { user } = useAppSelector((state: any) => state?.userReducer);
-  const router = useRouter();
   const { Title } = Typography;
 
   const [isModalOpen, setIsModalOpen] = useState({ image: false, user: false });
@@ -117,7 +114,7 @@ const HomePage = () => {
           />
         )}
       </div>
-      <div className="">
+      <div className="min-h-[50vh]">
         <Tabs defaultActiveKey="1" items={items} />
       </div>
     </div>

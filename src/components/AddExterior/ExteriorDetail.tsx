@@ -111,7 +111,7 @@ const ExteriorDetail = ({ typeFields, removeField, deletePhotes }: any) => {
           label={`${title} Warranty`}
           rules={[{ required: true }]}
         >
-          <DatePicker className="w-full" format={"YYYY-MM-DD"} />
+          <Input placeholder={`${title} Warranty`} />
         </Form.Item>
 
         <Form.Item

@@ -64,14 +64,18 @@ const ExteriorPage = () => {
   };
 
   const deleteItem = async (item: any) => {
-    let images = JSON.parse(item?.typeField);
-    images = [...images?.Roof?.ProjectPhotos, ...images?.Roof?.WarrantyPhotos];
+    const forImages = JSON.parse(item?.typeField);
+    const deleteimages: any = [];
+
+    Object.entries(forImages).forEach(([_, value]: any) => {
+      deleteimages.push(value.ProjectPhotos, value.WarrantyPhotos);
+    });
 
     try {
       await userExteriorPost({ userId: user?.id, deleteId: item?.id });
 
-      if (!!images.length) {
-        images?.forEach((t: any) => {
+      if (!!deleteimages.length) {
+        deleteimages?.forEach((t: any) => {
           removeFileToS3(t);
         });
       }
@@ -287,7 +291,6 @@ const updateData = (data: any) => {
     acc[key] = {
       ...value,
       InstallDate: dayjs(value.InstallDate),
-      Warranty: dayjs(value.Warranty),
 
       ProjectPhotos: value?.ProjectPhotos?.map((t: any) => ({
         uid: t,

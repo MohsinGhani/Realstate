@@ -41,6 +41,10 @@ const LevelsPage = () => {
 
   const handleAddModalOpen = (id = null) => {
     setIsModalVisible({ id, modal: true });
+
+    if (!id) {
+      form.setFieldsValue({ floor: `level ${data?.length + 1}` });
+    }
   };
 
   const handleAddModalClose = () => {

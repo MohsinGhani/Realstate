@@ -38,7 +38,6 @@ const Interior = () => {
           onClick={() => {
             router.push("/levels");
           }}
-          disabled={loading}
         >
           Add Interior
         </Button>

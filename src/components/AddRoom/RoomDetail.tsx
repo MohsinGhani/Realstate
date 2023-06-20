@@ -5,7 +5,7 @@ const iconProps = {
   rev: undefined,
 };
 
-const RoomDetail = ({ typeFields, removeField }: any) => {
+const RoomDetail = ({ typeFields, removeField, deletePhotes }: any) => {
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
       return e;
@@ -13,18 +13,24 @@ const RoomDetail = ({ typeFields, removeField }: any) => {
     return e?.fileList;
   };
 
-  return typeFields?.map(({ title, name, isDeleted }: any, i: any) => (
+  const onRemoveHandler = (e: any) => {
+    if (!e?.originFileObj) {
+      deletePhotes.current.push(e.uid);
+    }
+  };
+
+  return typeFields?.map(({ title, name }: any, i: any) => (
     <div key={i}>
       <div className="flex justify-between">
         <h4>{title}</h4>
-        {isDeleted && (
+        <Space>
           <DeleteTwoTone
             {...iconProps}
             twoToneColor="#FF0000"
             className="cursor-pointer"
             onClick={() => removeField(name)}
           />
-        )}
+        </Space>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -51,7 +57,12 @@ const RoomDetail = ({ typeFields, removeField }: any) => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload maxCount={1} listType="picture-card" onPreview={() => false}>
+          <Upload
+            maxCount={1}
+            listType="picture-card"
+            onPreview={() => false}
+            onRemove={onRemoveHandler}
+          >
             <Space>
               <PlusOutlined {...iconProps} />
               Upload
@@ -65,7 +76,12 @@ const RoomDetail = ({ typeFields, removeField }: any) => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload maxCount={1} listType="picture-card" onPreview={() => false}>
+          <Upload
+            maxCount={1}
+            listType="picture-card"
+            onPreview={() => false}
+            onRemove={onRemoveHandler}
+          >
             <Space>
               <PlusOutlined {...iconProps} />
               Upload

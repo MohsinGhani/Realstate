@@ -42,7 +42,6 @@ const Exterior = () => {
           onClick={() => {
             router.push("/exterior");
           }}
-          disabled={loading}
         >
           Add Exterior
         </Button>

@@ -20,8 +20,6 @@ async function userFloors(event, context, callback) {
         },
       };
 
-      console.log("🚀  userParams:", userParams);
-
       await ddb.put(userParams).promise();
     }
     // for update Data

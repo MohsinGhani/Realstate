@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Table,
   Button,
@@ -15,7 +15,7 @@ import withAuth from "@/components/common/withAuth";
 import { useAxo } from "../../../services/helpers/api";
 import { API } from "../../../services/constant";
 import { useAppSelector } from "@/redux/hooks";
-import { putFileToS3 } from "@/services/s3Service";
+import { putFileToS3, removeFileToS3 } from "@/services/s3Service";
 import { v4 as uuidv4 } from "uuid";
 import { usePathname } from "next/navigation";
 import dayjs from "dayjs";
@@ -28,6 +28,7 @@ const RoomPage = () => {
   const router = useRouter();
   const { user } = useAppSelector((state: any) => state?.userReducer);
   const floorId = usePathname()?.split("/")[2];
+  const deletePhotes = useRef([]);
 
   const [typeFields, setTypeFields] = useState<any>([]);
   const [isModalVisible, setIsModalVisible] = useState({
@@ -49,6 +50,10 @@ const RoomPage = () => {
 
   const handleAddModalOpen = (id = null) => {
     setIsModalVisible({ id, modal: true });
+
+    if (!id) {
+      form.setFieldsValue({ name: `room ${data?.length + 1}` });
+    }
   };
 
   const handleAddModalClose = (reset = false) => {
@@ -57,12 +62,26 @@ const RoomPage = () => {
     if (reset) {
       form.resetFields();
       setTypeFields([]);
+      deletePhotes.current = [];
     }
   };
 
   const deleteItem = async (item: any) => {
+    const forImages = JSON.parse(item?.typeField);
+    const deleteimages: any = [];
+
+    Object.entries(forImages).forEach(([_, value]: any) => {
+      deleteimages.push(value.Picture, value.Receipt);
+    });
+
     try {
       await userRoomsPost({ floorId, deleteId: item?.id });
+
+      if (!!deleteimages.length) {
+        deleteimages?.forEach((t: any) => {
+          removeFileToS3(t);
+        });
+      }
     } catch (err) {
       console.log("err:", err);
     }
@@ -86,6 +105,12 @@ const RoomPage = () => {
       const { addFieldName, name, type, ...rest } = await form.validateFields();
 
       const updatedData = uploadImages(rest);
+
+      if (!!deletePhotes.current.length) {
+        deletePhotes.current?.forEach((t: any) => {
+          removeFileToS3(t);
+        });
+      }
 
       await userRoomsPost({
         id: isModalVisible?.id,
@@ -208,6 +233,7 @@ const RoomPage = () => {
           form={form}
           typeFields={typeFields}
           setTypeFields={setTypeFields}
+          deletePhotes={deletePhotes}
         />
       </Modal>
     </div>
@@ -250,17 +276,19 @@ const updateData = (data: any) => {
     acc[key] = {
       ...value,
       InstallDate: dayjs(value.InstallDate),
+
       Picture: [
         {
-          uid: "-1",
+          uid: value.Picture,
           name: `${value.Picture}`,
           status: "done",
           url: `https://real-estate-1.s3.us-east-2.amazonaws.com/${value.Picture}`,
         },
       ],
+
       Receipt: [
         {
-          uid: "-1",
+          uid: value.Receipt,
           name: `${value.Receipt}`,
           status: "done",
           url: `https://real-estate-1.s3.us-east-2.amazonaws.com/${value.Receipt}`,

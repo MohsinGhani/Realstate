@@ -33,6 +33,7 @@ const ExteriorPage = () => {
   const deletePhotes = useRef([]);
 
   const [typeFields, setTypeFields] = useState<any>([]);
+  const [loader, setLoader] = useState<any>(false);
   const [isModalVisible, setIsModalVisible] = useState({
     modal: false,
     id: null,
@@ -99,9 +100,10 @@ const ExteriorPage = () => {
 
   const handleOnFinish = async () => {
     try {
+      setLoader(true);
       const { name, type, ...rest } = await form.validateFields();
 
-      const updatedData = uploadImages(rest);
+      const updatedData = await uploadImages(rest);
 
       if (!!deletePhotes.current.length) {
         deletePhotes.current?.forEach((t: any) => {
@@ -121,6 +123,8 @@ const ExteriorPage = () => {
       handleAddModalClose(true);
     } catch (err) {
       console.log("err:", err);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -196,7 +200,7 @@ const ExteriorPage = () => {
       <Table
         dataSource={(data || [])?.map((t: any, i: any) => ({ ...t, key: i }))}
         columns={columns}
-        loading={loading}
+        loading={loading || loader}
       />
 
       <Modal
@@ -209,7 +213,7 @@ const ExteriorPage = () => {
           <Button
             key="cancel"
             onClick={() => handleAddModalClose(!!isModalVisible?.id)}
-            disabled={loading}
+            disabled={loading || loader}
           >
             Cancel
           </Button>,
@@ -217,7 +221,7 @@ const ExteriorPage = () => {
             key="save"
             type="primary"
             onClick={handleOnFinish}
-            loading={loading}
+            loading={loading || loader}
           >
             {!isModalVisible?.id ? "Save" : "Update"}
           </Button>,
@@ -236,51 +240,39 @@ const ExteriorPage = () => {
 
 export default withAuth(ExteriorPage);
 
-const uploadImages = (data: any) => {
+const uploadImages = async (data: any) => {
   const updatedData = { ...data };
 
   for (const key in updatedData) {
-    if (updatedData.hasOwnProperty(key)) {
-      const clonedProjectPhotos = structuredClone(
-        updatedData[key]?.ProjectPhotos?.map((photo: any) => ({
+    if (!updatedData.hasOwnProperty(key)) continue;
+
+    const handlePhotos = async (type: string, photos: any[]) => {
+      const clonedPhotos = structuredClone(
+        photos?.map((photo: any) => ({
           originFileObj: photo?.originFileObj,
           uid: photo?.uid,
         }))
       );
 
-      if (!!clonedProjectPhotos?.length) {
-        updatedData[key].ProjectPhotos = [];
-        clonedProjectPhotos?.forEach((t: any) => {
+      if (!!clonedPhotos?.length) {
+        updatedData[key][type] = [];
+        for (const t of clonedPhotos) {
           if (t?.originFileObj) {
             const keyPicture = `EXTERIOR/${uuidv4()}.webp`;
-            updatedData[key].ProjectPhotos.push(keyPicture);
-            putFileToS3(keyPicture, t.originFileObj);
+            updatedData[key][type].push(keyPicture);
+            await putFileToS3(keyPicture, t.originFileObj);
           } else {
-            updatedData[key].ProjectPhotos.push(t.uid);
+            updatedData[key][type].push(t.uid);
           }
-        });
+        }
       }
+    };
 
-      const clonedWarrantyPhotos = structuredClone(
-        updatedData[key]?.WarrantyPhotos?.map((photo: any) => ({
-          originFileObj: photo?.originFileObj,
-          uid: photo?.uid,
-        }))
-      );
-
-      if (!!clonedWarrantyPhotos?.length) {
-        updatedData[key].WarrantyPhotos = [];
-        clonedWarrantyPhotos?.forEach((t: any) => {
-          if (t?.originFileObj) {
-            const keyPicture = `EXTERIOR/${uuidv4()}.webp`;
-            updatedData[key].WarrantyPhotos.push(keyPicture);
-            putFileToS3(keyPicture, t.originFileObj);
-          } else {
-            updatedData[key].WarrantyPhotos.push(t.uid);
-          }
-        });
-      }
-    }
+    await handlePhotos("ProjectPhotos", updatedData[key]?.ProjectPhotos || []);
+    await handlePhotos(
+      "WarrantyPhotos",
+      updatedData[key]?.WarrantyPhotos || []
+    );
   }
 
   return updatedData;
@@ -290,21 +282,25 @@ const updateData = (data: any) => {
   return Object.entries(data).reduce((acc: any, [key, value]: any) => {
     acc[key] = {
       ...value,
-      InstallDate: dayjs(value.InstallDate),
+      InstallDate: value.InstallDate ? dayjs(value.InstallDate) : undefined,
 
-      ProjectPhotos: value?.ProjectPhotos?.map((t: any) => ({
-        uid: t,
-        name: "Picture",
-        status: "done",
-        url: `https://real-estate-1.s3.us-east-2.amazonaws.com/${t}`,
-      })),
+      ProjectPhotos: value?.ProjectPhotos
+        ? value?.ProjectPhotos?.map((t: any) => ({
+            uid: t,
+            name: "Picture",
+            status: "done",
+            url: `https://real-estate-1.s3.us-east-2.amazonaws.com/${t}`,
+          }))
+        : undefined,
 
-      WarrantyPhotos: value?.WarrantyPhotos?.map((t: any) => ({
-        uid: t,
-        name: "Picture",
-        status: "done",
-        url: `https://real-estate-1.s3.us-east-2.amazonaws.com/${t}`,
-      })),
+      WarrantyPhotos: value?.WarrantyPhotos
+        ? value?.WarrantyPhotos?.map((t: any) => ({
+            uid: t,
+            name: "Picture",
+            status: "done",
+            url: `https://real-estate-1.s3.us-east-2.amazonaws.com/${t}`,
+          }))
+        : undefined,
     };
     return acc;
   }, {});

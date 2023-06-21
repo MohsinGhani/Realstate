@@ -64,7 +64,7 @@ const HomePage = () => {
             handleCancel={handleCancel}
           />
         </div>
-        <div className="flex">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <Descriptions>
             <Descriptions.Item label="UserName">{`${user?.firstName} ${user?.lastName}`}</Descriptions.Item>
             <Descriptions.Item label="Email">{user?.email}</Descriptions.Item>

@@ -37,7 +37,6 @@ const ExteriorDetail = ({ typeFields, removeField, deletePhotes }: any) => {
         <Form.Item
           name={[name, "RoofMaterial"]}
           label={`${title} Roof Material`}
-          rules={[{ required: true }]}
         >
           <Input placeholder={`${title} Roof Material`} />
         </Form.Item>
@@ -45,79 +44,54 @@ const ExteriorDetail = ({ typeFields, removeField, deletePhotes }: any) => {
         <Form.Item
           name={[name, "ShingleBrand"]}
           label={`${title} Shingle Brand`}
-          rules={[{ required: true }]}
         >
           <Input placeholder={`${title} Shingle Brand`} />
         </Form.Item>
 
-        <Form.Item
-          name={[name, "Color"]}
-          label={`${title} Color`}
-          rules={[{ required: true }]}
-        >
+        <Form.Item name={[name, "Color"]} label={`${title} Color`}>
           <Input placeholder={`${title} Color`} />
         </Form.Item>
 
         <Form.Item
           name={[name, "Underlayment"]}
           label={`${title} Underlayment`}
-          rules={[{ required: true }]}
         >
           <Input placeholder={`${title} Underlayment`} />
         </Form.Item>
 
-        <Form.Item
-          name={[name, "RoofSize"]}
-          label={`${title} Roof Size`}
-          rules={[{ required: true }]}
-        >
+        <Form.Item name={[name, "RoofSize"]} label={`${title} Roof Size`}>
           <Input placeholder={`${title} Roof Size`} />
         </Form.Item>
 
         <Form.Item
           name={[name, "EdgeMetalColor"]}
           label={`${title} Edge Metal Color`}
-          rules={[{ required: true }]}
         >
           <Input placeholder={`${title} Edge Metal Color`} />
         </Form.Item>
 
-        <Form.Item
-          name={[name, "Cost"]}
-          label={`${title} Cost`}
-          rules={[{ required: true }]}
-        >
+        <Form.Item name={[name, "Cost"]} label={`${title} Cost`}>
           <Input placeholder={`${title} Cost`} />
         </Form.Item>
 
         <Form.Item
           name={[name, "ContractorName"]}
           label={`${title} Contractor Name`}
-          rules={[{ required: true }]}
         >
           <Input placeholder={`${title} Contractor Name`} />
         </Form.Item>
 
-        <Form.Item
-          name={[name, "InstallDate"]}
-          label={`${title} Install Date`}
-          rules={[{ required: true }]}
-        >
+        <Form.Item name={[name, "InstallDate"]} label={`${title} Install Date`}>
           <DatePicker className="w-full" format={"YYYY-MM-DD"} />
         </Form.Item>
 
-        <Form.Item
-          name={[name, "Warranty"]}
-          label={`${title} Warranty`}
-          rules={[{ required: true }]}
-        >
+        <Form.Item name={[name, "Warranty"]} label={`${title} Warranty`}>
           <Input placeholder={`${title} Warranty`} />
         </Form.Item>
 
         <Form.Item
           name={[name, "ProjectPhotos"]}
           label={`${title} Project Photos`}
-          rules={[{ required: true }]}
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
@@ -137,7 +111,6 @@ const ExteriorDetail = ({ typeFields, removeField, deletePhotes }: any) => {
         <Form.Item
           name={[name, "WarrantyPhotos"]}
           label={`${title} Warranty Photos`}
-          rules={[{ required: true }]}
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >

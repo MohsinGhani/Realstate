@@ -31,6 +31,7 @@ const RoomPage = () => {
   const deletePhotes = useRef([]);
 
   const [typeFields, setTypeFields] = useState<any>([]);
+  const [loader, setLoader] = useState<any>(false);
   const [isModalVisible, setIsModalVisible] = useState({
     modal: false,
     id: null,
@@ -102,9 +103,11 @@ const RoomPage = () => {
 
   const handleOnFinish = async () => {
     try {
-      const { addFieldName, name, type, ...rest } = await form.validateFields();
+      setLoader(true);
+      const { changeName, addFieldName, name, type, ...rest } =
+        await form.validateFields();
 
-      const updatedData = uploadImages(rest);
+      const updatedData = await uploadImages(rest);
 
       if (!!deletePhotes.current.length) {
         deletePhotes.current?.forEach((t: any) => {
@@ -124,6 +127,8 @@ const RoomPage = () => {
       handleAddModalClose(true);
     } catch (err) {
       console.log("err:", err);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -202,7 +207,7 @@ const RoomPage = () => {
       <Table
         dataSource={(data || [])?.map((t: any, i: any) => ({ ...t, key: i }))}
         columns={columns}
-        loading={loading}
+        loading={loading || loader}
       />
 
       <Modal
@@ -215,7 +220,7 @@ const RoomPage = () => {
           <Button
             key="cancel"
             onClick={() => handleAddModalClose(!!isModalVisible?.id)}
-            disabled={loading}
+            disabled={loading || loader}
           >
             Cancel
           </Button>,
@@ -223,7 +228,7 @@ const RoomPage = () => {
             key="save"
             type="primary"
             onClick={handleOnFinish}
-            loading={loading}
+            loading={loading || loader}
           >
             {!isModalVisible?.id ? "Save" : "Update"}
           </Button>,
@@ -242,7 +247,7 @@ const RoomPage = () => {
 
 export default withAuth(RoomPage);
 
-const uploadImages = (data: any) => {
+const uploadImages = async (data: any) => {
   const updatedData = { ...data };
 
   for (const key in updatedData) {
@@ -253,7 +258,7 @@ const uploadImages = (data: any) => {
       if (picture?.originFileObj) {
         const keyPicture = `ROOMS/${uuidv4()}.webp`;
         updatedData[key].Picture = keyPicture;
-        putFileToS3(keyPicture, picture.originFileObj);
+        await putFileToS3(keyPicture, picture.originFileObj);
       } else {
         updatedData[key].Picture = picture?.name;
       }
@@ -261,7 +266,7 @@ const uploadImages = (data: any) => {
       if (receipt?.originFileObj) {
         const keyReceipt = `ROOMS/${uuidv4()}.webp`;
         updatedData[key].Receipt = keyReceipt;
-        putFileToS3(keyReceipt, receipt.originFileObj);
+        await putFileToS3(keyReceipt, receipt.originFileObj);
       } else {
         updatedData[key].Receipt = receipt?.name;
       }
@@ -275,25 +280,29 @@ const updateData = (data: any) => {
   return Object.entries(data).reduce((acc: any, [key, value]: any) => {
     acc[key] = {
       ...value,
-      InstallDate: dayjs(value.InstallDate),
+      InstallDate: value.InstallDate ? dayjs(value.InstallDate) : undefined,
 
-      Picture: [
-        {
-          uid: value.Picture,
-          name: `${value.Picture}`,
-          status: "done",
-          url: `https://real-estate-1.s3.us-east-2.amazonaws.com/${value.Picture}`,
-        },
-      ],
+      Picture: value.Picture
+        ? [
+            {
+              uid: value.Picture,
+              name: `${value.Picture}`,
+              status: "done",
+              url: `https://real-estate-1.s3.us-east-2.amazonaws.com/${value.Picture}`,
+            },
+          ]
+        : undefined,
 
-      Receipt: [
-        {
-          uid: value.Receipt,
-          name: `${value.Receipt}`,
-          status: "done",
-          url: `https://real-estate-1.s3.us-east-2.amazonaws.com/${value.Receipt}`,
-        },
-      ],
+      Receipt: value.Receipt
+        ? [
+            {
+              uid: value.Receipt,
+              name: `${value.Receipt}`,
+              status: "done",
+              url: `https://real-estate-1.s3.us-east-2.amazonaws.com/${value.Receipt}`,
+            },
+          ]
+        : undefined,
     };
     return acc;
   }, {});

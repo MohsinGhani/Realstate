@@ -11,6 +11,7 @@ const iconProps = {
 
 const AddRoom = ({ form, typeFields, setTypeFields, deletePhotes }: any) => {
   const type = Form.useWatch("type", form);
+  const changeName = Form.useWatch(["changeName", "name"], form);
 
   const addField = () => {
     try {
@@ -143,8 +144,35 @@ const AddRoom = ({ form, typeFields, setTypeFields, deletePhotes }: any) => {
     },
   ];
 
+  const onChangeName = async () => {
+    try {
+      const {
+        changeName: { name, value },
+        ...rest
+      } = await form.validateFields();
+
+      if (name !== value) {
+        const perValue = rest[name];
+        setTypeFields((pre: any) =>
+          pre?.map((t: any) =>
+            t.name === name ? { ...t, title: value, name: value } : t
+          )
+        );
+        form.setFieldsValue({
+          [value]: perValue,
+        });
+      }
+    } catch (err) {
+      console.log("err:", err);
+    } finally {
+      form.setFieldsValue({
+        changeName: { name: undefined, value: undefined },
+      });
+    }
+  };
+
   return (
-    <div className="overflow-y-auto h-[80vh]" id="journal-scroll">
+    <div className="overflow-y-auto h-[80vh] pr-[12px]" id="journal-scroll">
       <Form form={form} layout="vertical" requiredMark={false}>
         <Form.Item label="Name" name="name" rules={[{ required: true }]}>
           <Input placeholder="Name" />
@@ -161,6 +189,9 @@ const AddRoom = ({ form, typeFields, setTypeFields, deletePhotes }: any) => {
           typeFields={typeFields}
           removeField={removeField}
           deletePhotes={deletePhotes}
+          onChangeName={onChangeName}
+          changeName={changeName}
+          form={form}
         />
 
         {!!type && (

@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+#journal-scroll {
+  scrollbar-gutter: stable;
+}
 #journal-scroll::-webkit-scrollbar {
   width: 4px;
   cursor: pointer;
@@ -13,12 +22,6 @@
 #journal-scroll::-webkit-scrollbar-thumb {
   cursor: pointer;
   background-color: #b3bcc7;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
 }
 
 .upload-list-inline .ant-upload-list-item {

@@ -1,11 +1,18 @@
 import React from "react";
-import { DatePicker, Form, Input, Space, Upload } from "antd";
-import { DeleteTwoTone, PlusOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Form, Input, Space, Upload } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 const iconProps = {
   rev: undefined,
 };
 
-const RoomDetail = ({ typeFields, removeField, deletePhotes }: any) => {
+const RoomDetail = ({
+  typeFields,
+  removeField,
+  deletePhotes,
+  onChangeName,
+  changeName,
+  form,
+}: any) => {
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
       return e;
@@ -19,17 +26,49 @@ const RoomDetail = ({ typeFields, removeField, deletePhotes }: any) => {
     }
   };
 
+  const changeNameHandler = (value: any) => {
+    form.setFieldsValue({ changeName: { name: value, value } });
+  };
+
   return typeFields?.map(({ title, name }: any, i: any) => (
     <div key={i}>
-      <div className="flex justify-between">
+      <div
+        className={`flex justify-between ${
+          changeName !== name ? "hidden" : ""
+        }`}
+      >
+        <Form.Item name={["changeName", "value"]} className="mb-1">
+          <Input />
+        </Form.Item>
+        <Form.Item name={["changeName", "name"]} className="mb-1">
+          <Button shape="round" type="primary" onClick={onChangeName}>
+            Save
+          </Button>
+        </Form.Item>
+      </div>
+
+      <div
+        className={`flex justify-between ${
+          changeName !== name ? "" : "hidden"
+        }`}
+      >
         <h4>{title}</h4>
         <Space>
-          <DeleteTwoTone
-            {...iconProps}
-            twoToneColor="#FF0000"
-            className="cursor-pointer"
+          <Button
+            shape="round"
+            className="w-20"
+            onClick={() => changeNameHandler(name)}
+          >
+            Edit
+          </Button>
+          <Button
+            className="w-20"
+            shape="round"
+            danger
             onClick={() => removeField(name)}
-          />
+          >
+            Delete
+          </Button>
         </Space>
       </div>
 
@@ -38,7 +77,6 @@ const RoomDetail = ({ typeFields, removeField, deletePhotes }: any) => {
           name={[name, "InstallDate"]}
           label={`${title} Install Date`}
           className="mb-1"
-          rules={[{ required: true }]}
         >
           <DatePicker className="w-full" format={"YYYY-MM-DD"} />
         </Form.Item>
@@ -46,14 +84,12 @@ const RoomDetail = ({ typeFields, removeField, deletePhotes }: any) => {
           name={[name, "Warranty"]}
           label={`${title} Warranty`}
           className="mb-1"
-          rules={[{ required: true }]}
         >
           <Input placeholder={`${title} Warranty`} />
         </Form.Item>
         <Form.Item
           name={[name, "Picture"]}
           label={`${title} Picture`}
-          rules={[{ required: true }]}
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
@@ -72,7 +108,6 @@ const RoomDetail = ({ typeFields, removeField, deletePhotes }: any) => {
         <Form.Item
           name={[name, "Receipt"]}
           label={`${title} Receipt`}
-          rules={[{ required: true }]}
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >

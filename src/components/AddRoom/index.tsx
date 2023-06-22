@@ -4,6 +4,7 @@ import React from "react";
 import { Button, Form, Input, Select, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import RoomDetail from "./RoomDetail";
+import { throws } from "assert";
 
 const iconProps = {
   rev: undefined,
@@ -13,12 +14,10 @@ const AddRoom = ({ form, typeFields, setTypeFields, deletePhotes }: any) => {
   const type = Form.useWatch("type", form);
   const changeName = Form.useWatch(["changeName", "name"], form);
 
-  const addField = () => {
+  const addField = (value: any) => {
     try {
-      const value = form.getFieldValue("addFieldName");
-
       if (!value?.length) {
-        return message.info("Please write the field name");
+        throw new Error("Please write the field name");
       }
 
       const findValue = typeFields?.find(
@@ -31,10 +30,10 @@ const AddRoom = ({ form, typeFields, setTypeFields, deletePhotes }: any) => {
           addFieldName: undefined,
         });
       } else {
-        message.error(`${value} field name already exists`);
+        throw new Error(`${value} field name already exists`);
       }
-    } catch (error) {
-      console.log("🚀  error:", error);
+    } catch (error: any) {
+      message.error(error.message);
     }
   };
 
@@ -153,14 +152,23 @@ const AddRoom = ({ form, typeFields, setTypeFields, deletePhotes }: any) => {
 
       if (name !== value) {
         const perValue = rest[name];
-        setTypeFields((pre: any) =>
-          pre?.map((t: any) =>
-            t.name === name ? { ...t, title: value, name: value } : t
-          )
+
+        const findValue = typeFields?.find(
+          (x: any) => x?.name?.toLowerCase() === value?.toLowerCase()
         );
-        form.setFieldsValue({
-          [value]: perValue,
-        });
+
+        if (!findValue?.name) {
+          setTypeFields((pre: any) =>
+            pre?.map((t: any) =>
+              t.name === name ? { ...t, title: value, name: value } : t
+            )
+          );
+          form.setFieldsValue({
+            [value]: perValue,
+          });
+        } else {
+          message.error(`${value} field name already exists`);
+        }
       }
     } catch (err) {
       console.log("err:", err);
@@ -202,7 +210,10 @@ const AddRoom = ({ form, typeFields, setTypeFields, deletePhotes }: any) => {
             <Button
               type="primary"
               icon={<PlusOutlined {...iconProps} />}
-              onClick={addField}
+              onClick={() => {
+                const value = form.getFieldValue("addFieldName");
+                addField(value);
+              }}
             >
               Add field
             </Button>

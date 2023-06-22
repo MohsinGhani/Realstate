@@ -1,7 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Descriptions, Input, QRCode, Tabs, Typography } from "antd";
+import {
+  Button,
+  Col,
+  Descriptions,
+  Input,
+  QRCode,
+  Row,
+  Tabs,
+  Typography,
+} from "antd";
 import withAuth from "@/components/common/withAuth";
 import { useAppSelector } from "@/redux/hooks";
 import AddHouseImg from "@/components/LandingPage/AddHouseImg";
@@ -64,26 +73,36 @@ const HomePage = () => {
             handleCancel={handleCancel}
           />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <Descriptions>
-            <Descriptions.Item label="UserName">{`${user?.firstName} ${user?.lastName}`}</Descriptions.Item>
-            <Descriptions.Item label="Email">{user?.email}</Descriptions.Item>
-            <Descriptions.Item label="City">{user?.city}</Descriptions.Item>
-            <Descriptions.Item label="State">{user?.state}</Descriptions.Item>
-            <Descriptions.Item label="Street">{user?.street}</Descriptions.Item>
-            <Descriptions.Item label="ZipCode">
-              {user?.zipCode}
-            </Descriptions.Item>
-            <Descriptions.Item label="Contractor Code">
-              {user?.contractorCode}
-            </Descriptions.Item>
-          </Descriptions>
 
-          <div className="flex justify-center flex-col items-center mb-4">
-            <QRCode value={link} size={250} />
-            <Input maxLength={60} value={link} readOnly />
-          </div>
-        </div>
+        <Row>
+          <Col
+            span={18}
+            xs={{ order: 2, span: 24 }}
+            sm={{ order: 1, span: 18 }}
+          >
+            <Descriptions>
+              <Descriptions.Item label="UserName">{`${user?.firstName} ${user?.lastName}`}</Descriptions.Item>
+              <Descriptions.Item label="Email">{user?.email}</Descriptions.Item>
+              <Descriptions.Item label="City">{user?.city}</Descriptions.Item>
+              <Descriptions.Item label="State">{user?.state}</Descriptions.Item>
+              <Descriptions.Item label="Street">
+                {user?.street}
+              </Descriptions.Item>
+              <Descriptions.Item label="ZipCode">
+                {user?.zipCode}
+              </Descriptions.Item>
+              <Descriptions.Item label="Contractor Code">
+                {user?.contractorCode}
+              </Descriptions.Item>
+            </Descriptions>
+          </Col>
+          <Col span={6} xs={{ order: 1, span: 24 }} sm={{ order: 2, span: 6 }}>
+            <div className="flex justify-center flex-col items-center mb-4">
+              <QRCode value={link} size={250} />
+              <Input maxLength={60} value={link} readOnly />
+            </div>
+          </Col>
+        </Row>
       </div>
 
       <div className="mb-4">

@@ -1,4 +1,4 @@
-const { getItemByQuery } = require("../lib/helper");
+const { getItemByQuery, upDateItemByQuery } = require("../lib/helper");
 const { v4: uuidv4 } = require("uuid");
 const aws = require("aws-sdk");
 const ddb = new aws.DynamoDB.DocumentClient({});
@@ -15,8 +15,8 @@ async function userRooms(event, context, callback) {
         Item: {
           id: uuidv4(),
           createdBy: params.userId,
-          floorId: params.floorId,
           name: params.name,
+          roomLevel: params.roomLevel,
           type: params.type,
           typeField: params.typeField,
           createdAt: new Date().getTime(),
@@ -28,24 +28,18 @@ async function userRooms(event, context, callback) {
 
     // for update Data
     if (!!params.name && !!params.id) {
-      const updateParams = {
-        TableName: "realEstate-rooms",
-        Key: { id: params.id },
-        UpdateExpression:
-          "SET #name = :name, #type = :type, #typeField = :typeField",
-        ExpressionAttributeNames: {
-          "#name": "name",
-          "#type": "type",
-          "#typeField": "typeField",
-        },
-        ExpressionAttributeValues: {
-          ":name": params.name,
-          ":type": params.type,
-          ":typeField": params.typeField,
-        },
+      const updateValues = {
+        name: params.name,
+        roomLevel: params.roomLevel,
+        type: params.type,
+        typeField: params.typeField,
       };
 
-      await ddb.update(updateParams).promise();
+      await upDateItemByQuery({
+        TableName: "realEstate-rooms",
+        keyId: params.id,
+        params: updateValues,
+      });
     }
 
     // // for delete Data
@@ -61,10 +55,10 @@ async function userRooms(event, context, callback) {
     // for get Data
     const data = await getItemByQuery({
       table: "realEstate-rooms",
-      IndexName: "floorId",
-      KeyConditionExpression: "floorId = :floorId",
+      IndexName: "createdBy",
+      KeyConditionExpression: "createdBy = :createdBy",
       ExpressionAttributeValues: {
-        ":floorId": params.floorId,
+        ":createdBy": params.userId,
       },
     });
 

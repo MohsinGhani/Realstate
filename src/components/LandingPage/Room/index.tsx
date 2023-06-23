@@ -7,26 +7,33 @@ import { Button, Table } from "antd";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-const Interior = () => {
+const Room = () => {
   const router = useRouter();
   const { user } = useAppSelector((state: any) => state?.userReducer);
 
-  const [{ loading, data }, userFloorPost] = useAxo("post", API.USER_FLOORS);
+  const [{ loading, data }, userRoomsPost] = useAxo("post", API.USER_ROOMS);
 
   useEffect(() => {
     if (user?.id) {
-      userFloorPost({ userId: user?.id });
+      userRoomsPost({ userId: user?.id });
     }
   }, [user?.id]);
 
   const columns: any = [
     {
-      title: <span className="font-extrabold text-18">House Levels</span>,
+      title: "Rooms",
       dataIndex: "name",
       key: "name",
-      render: (_: any, record: any) => (
-        <Link href={`/levels/${record?.id}`}>{record?.name}</Link>
-      ),
+    },
+    {
+      title: "Room Level",
+      dataIndex: "roomLevel",
+      key: "roomLevel",
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
     },
   ];
 
@@ -36,10 +43,10 @@ const Interior = () => {
         <Button
           type="primary"
           onClick={() => {
-            router.push("/levels");
+            router.push("/room");
           }}
         >
-          Add Interior
+          Add Room
         </Button>
       </div>
       <Table
@@ -51,4 +58,4 @@ const Interior = () => {
   );
 };
 
-export default Interior;
+export default Room;

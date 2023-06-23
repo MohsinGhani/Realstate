@@ -16,7 +16,7 @@ import { useAppSelector } from "@/redux/hooks";
 import AddHouseImg from "@/components/LandingPage/AddHouseImg";
 import EditUserDetails from "@/components/LandingPage/EditUserDetails";
 import Exterior from "@/components/LandingPage/Exterior";
-import Interior from "@/components/LandingPage/Interior";
+import Room from "@/components/LandingPage/Room";
 
 const HomePage = () => {
   const { user } = useAppSelector((state: any) => state?.userReducer);
@@ -40,13 +40,13 @@ const HomePage = () => {
   const items: any = [
     {
       key: "1",
-      label: `Exterior`,
-      children: <Exterior />,
+      label: `Room`,
+      children: <Room />,
     },
     {
       key: "2",
-      label: `Interior`,
-      children: <Interior />,
+      label: `Exterior`,
+      children: <Exterior />,
     },
     {
       key: "3",

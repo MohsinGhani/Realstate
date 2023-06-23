@@ -12,22 +12,24 @@ import {
 } from "antd";
 import AddRoom from "@/components/AddRoom";
 import withAuth from "@/components/common/withAuth";
-import { useAxo } from "../../../services/helpers/api";
-import { API } from "../../../services/constant";
+import { useAxo } from "../../services/helpers/api";
+import { API } from "../../services/constant";
 import { useAppSelector } from "@/redux/hooks";
 import { putFileToS3, removeFileToS3 } from "@/services/s3Service";
 import { v4 as uuidv4 } from "uuid";
-import { usePathname } from "next/navigation";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { HomeOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 
+const iconProps = {
+  rev: undefined,
+};
+
 const RoomPage = () => {
   const [form] = Form.useForm();
   const router = useRouter();
   const { user } = useAppSelector((state: any) => state?.userReducer);
-  const floorId = usePathname()?.split("/")[2];
   const deletePhotes = useRef([]);
 
   const [typeFields, setTypeFields] = useState<any>([]);
@@ -39,15 +41,11 @@ const RoomPage = () => {
 
   const [{ loading, data }, userRoomsPost] = useAxo("post", API.USER_ROOMS);
 
-  const iconProps = {
-    rev: undefined,
-  };
-
   useEffect(() => {
-    if (user?.id && floorId) {
-      userRoomsPost({ floorId });
+    if (user?.id) {
+      userRoomsPost({ userId: user?.id });
     }
-  }, [user?.id, floorId]);
+  }, [user?.id]);
 
   const handleAddModalOpen = (id = null) => {
     setIsModalVisible({ id, modal: true });
@@ -76,7 +74,7 @@ const RoomPage = () => {
     });
 
     try {
-      await userRoomsPost({ floorId, deleteId: item?.id });
+      await userRoomsPost({ userId: user?.id, deleteId: item?.id });
 
       if (!!deleteimages.length) {
         deleteimages?.forEach((t: any) => {
@@ -97,14 +95,19 @@ const RoomPage = () => {
         isDeleted: true,
       }))
     );
-    form.setFieldsValue({ name: item?.name, type: item.type, ...parseData });
+    form.setFieldsValue({
+      name: item?.name,
+      type: item.type,
+      roomLevel: item.roomLevel,
+      ...parseData,
+    });
     handleAddModalOpen(item?.id);
   };
 
   const handleOnFinish = async () => {
     try {
       setLoader(true);
-      const { changeName, addFieldName, name, type, ...rest } =
+      const { changeName, addFieldName, name, type, roomLevel, ...rest } =
         await form.validateFields();
 
       const updatedData = await uploadImages(rest);
@@ -118,8 +121,8 @@ const RoomPage = () => {
       await userRoomsPost({
         id: isModalVisible?.id,
         userId: user.id,
-        floorId,
         name,
+        roomLevel,
         type,
         typeField: JSON.stringify(updatedData),
       });
@@ -137,6 +140,11 @@ const RoomPage = () => {
       title: "Rooms",
       dataIndex: "name",
       key: "name",
+    },
+    {
+      title: "Room Level",
+      dataIndex: "roomLevel",
+      key: "roomLevel",
     },
     {
       title: "Type",
@@ -180,9 +188,6 @@ const RoomPage = () => {
             ),
           },
           {
-            title: <Link href="/levels">Floor</Link>,
-          },
-          {
             title: "Room",
           },
         ]}
@@ -190,7 +195,7 @@ const RoomPage = () => {
 
       <div className="flex justify-between my-4">
         <Button
-          onClick={() => router.push("/levels")}
+          onClick={() => router.push("/room")}
           icon={<ArrowLeftOutlined {...iconProps} />}
         >
           Back

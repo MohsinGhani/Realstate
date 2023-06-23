@@ -38,14 +38,6 @@ functions:
           method: post
           cors: true
 
-  userFloors:
-    handler: handler.userFloors
-    events:
-      - http:
-          path: api/userFloors
-          method: post
-          cors: true
-
   userRooms:
     handler: handler.userRooms
     events:

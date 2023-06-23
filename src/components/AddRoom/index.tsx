@@ -185,6 +185,9 @@ const AddRoom = ({ form, typeFields, setTypeFields, deletePhotes }: any) => {
         <Form.Item label="Name" name="name" rules={[{ required: true }]}>
           <Input placeholder="Name" />
         </Form.Item>
+        <Form.Item label="Room Level" name="roomLevel">
+          <Input placeholder="Room Level" />
+        </Form.Item>
         <Form.Item label="Type" name="type" rules={[{ required: true }]}>
           <Select
             placeholder="Select a Type"

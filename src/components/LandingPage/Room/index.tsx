@@ -5,19 +5,19 @@ import { useAxo } from "@/services/helpers/api";
 import { useAppSelector } from "@/redux/hooks";
 import { Button, Table } from "antd";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { capitalizeFirstLetter } from "@/services/helpers";
 
-const Room = () => {
+const Room = ({ role }: any) => {
   const router = useRouter();
   const { user } = useAppSelector((state: any) => state?.userReducer);
 
-  const [{ loading, data }, userRoomsPost] = useAxo("post", API.USER_ROOMS);
+  const [{ loading, data }, userExplorePost] = useAxo("post", API.USER_EXPLORE);
 
   useEffect(() => {
-    if (user?.id) {
-      userRoomsPost({ userId: user?.id });
+    if (user?.id && role) {
+      userExplorePost({ userId: user?.id, role });
     }
-  }, [user?.id]);
+  }, [user?.id, role]);
 
   const columns: any = [
     {
@@ -25,11 +25,15 @@ const Room = () => {
       dataIndex: "name",
       key: "name",
     },
-    {
-      title: "Room Level",
-      dataIndex: "roomLevel",
-      key: "roomLevel",
-    },
+    ...(role === "room"
+      ? [
+          {
+            title: "Room Level",
+            dataIndex: "roomLevel",
+            key: "roomLevel",
+          },
+        ]
+      : []),
     {
       title: "Type",
       dataIndex: "type",
@@ -43,10 +47,10 @@ const Room = () => {
         <Button
           type="primary"
           onClick={() => {
-            router.push("/room");
+            router.push(`/explore?role=${role}`);
           }}
         >
-          Add Room
+          {`Add ${capitalizeFirstLetter(role)}`}
         </Button>
       </div>
       <Table

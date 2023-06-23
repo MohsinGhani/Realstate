@@ -2,21 +2,16 @@
 
 const { sendRecieverEmail } = require("./controller/sendRecieverEmail");
 const { putUsersInDB } = require("./controller/putUsersInDB");
-const { userRooms } = require("./controller/userRooms");
+const { userExplore } = require("./controller/userExplore");
 const { userDetail } = require("./controller/userDetail");
-const { userExterior } = require("./controller/userExterior");
 
-module.exports.userExterior = async (event, context, callback) => {
-  context.callbackWaitsForEmptyEventLoop = false;
-  return userExterior(event, context, callback);
-};
 module.exports.userDetail = async (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
   return userDetail(event, context, callback);
 };
-module.exports.userRooms = async (event, context, callback) => {
+module.exports.userExplore = async (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
-  return userRooms(event, context, callback);
+  return userExplore(event, context, callback);
 };
 module.exports.putUsersInDB = async (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;

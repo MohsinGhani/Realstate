@@ -38,11 +38,11 @@ functions:
           method: post
           cors: true
 
-  userRooms:
-    handler: handler.userRooms
+  userExplore:
+    handler: handler.userExplore
     events:
       - http:
-          path: api/userRooms
+          path: api/userExplore
           method: post
           cors: true
 
@@ -51,13 +51,5 @@ functions:
     events:
       - http:
           path: api/userDetail
-          method: post
-          cors: true
-
-  userExterior:
-    handler: handler.userExterior
-    events:
-      - http:
-          path: api/userExterior
           method: post
           cors: true

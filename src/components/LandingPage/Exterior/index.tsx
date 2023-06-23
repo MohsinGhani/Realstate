@@ -6,20 +6,17 @@ import { useAppSelector } from "@/redux/hooks";
 import { Button, Table } from "antd";
 import { useRouter } from "next/navigation";
 
-const Exterior = () => {
+const Exterior = ({ role }: any) => {
   const router = useRouter();
   const { user } = useAppSelector((state: any) => state?.userReducer);
 
-  const [{ loading, data }, userExteriorPost] = useAxo(
-    "post",
-    API.USER_EXTERIOR
-  );
+  const [{ loading, data }, userExplorePost] = useAxo("post", API.USER_EXPLORE);
 
   useEffect(() => {
-    if (user?.id) {
-      userExteriorPost({ userId: user?.id });
+    if (user?.id && role) {
+      userExplorePost({ userId: user?.id, role });
     }
-  }, [user?.id]);
+  }, [user?.id, role]);
 
   const columns: any = [
     {
@@ -40,7 +37,7 @@ const Exterior = () => {
         <Button
           type="primary"
           onClick={() => {
-            router.push("/exterior");
+            router.push("/explore?role=exterior");
           }}
         >
           Add Exterior

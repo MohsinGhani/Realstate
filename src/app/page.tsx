@@ -15,7 +15,6 @@ import withAuth from "@/components/common/withAuth";
 import { useAppSelector } from "@/redux/hooks";
 import AddHouseImg from "@/components/LandingPage/AddHouseImg";
 import EditUserDetails from "@/components/LandingPage/EditUserDetails";
-import Exterior from "@/components/LandingPage/Exterior";
 import Room from "@/components/LandingPage/Room";
 
 const HomePage = () => {
@@ -41,12 +40,12 @@ const HomePage = () => {
     {
       key: "1",
       label: `Room`,
-      children: <Room />,
+      children: <Room role={"room"} />,
     },
     {
       key: "2",
       label: `Exterior`,
-      children: <Exterior />,
+      children: <Room role={"exterior"} />,
     },
     {
       key: "3",

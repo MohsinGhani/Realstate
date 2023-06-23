@@ -1,21 +1,23 @@
-const { getItemByQuery } = require("../lib/helper");
+const { getItemByQuery, upDateItemByQuery } = require("../lib/helper");
 const { v4: uuidv4 } = require("uuid");
 const aws = require("aws-sdk");
 const ddb = new aws.DynamoDB.DocumentClient({});
 
-async function userExterior(event, context, callback) {
+async function userExplore(event, context, callback) {
   let params = JSON.parse(event.body);
   console.log("🚀 ~ params", params);
 
   try {
-    // for AddData
+    // for add Data
     if (!!params.name && !params.id) {
       const userParams = {
-        TableName: "realEstate-exterior",
+        TableName: "realEstate-explore",
         Item: {
           id: uuidv4(),
           createdBy: params.userId,
           name: params.name,
+          roomLevel: params.roomLevel,
+          role: params.role,
           type: params.type,
           typeField: params.typeField,
           createdAt: new Date().getTime(),
@@ -27,30 +29,24 @@ async function userExterior(event, context, callback) {
 
     // for update Data
     if (!!params.name && !!params.id) {
-      const updateParams = {
-        TableName: "realEstate-exterior",
-        Key: { id: params.id },
-        UpdateExpression:
-          "SET #name = :name, #type = :type, #typeField = :typeField",
-        ExpressionAttributeNames: {
-          "#name": "name",
-          "#type": "type",
-          "#typeField": "typeField",
-        },
-        ExpressionAttributeValues: {
-          ":name": params.name,
-          ":type": params.type,
-          ":typeField": params.typeField,
-        },
+      const updateValues = {
+        name: params.name,
+        roomLevel: params.roomLevel,
+        type: params.type,
+        typeField: params.typeField,
       };
 
-      await ddb.update(updateParams).promise();
+      await upDateItemByQuery({
+        TableName: "realEstate-explore",
+        keyId: params.id,
+        params: updateValues,
+      });
     }
 
-    // for delete Data
+    // // for delete Data
     if (!!params.deleteId) {
       const deleteParams = {
-        TableName: "realEstate-exterior",
+        TableName: "realEstate-explore",
         Key: { id: params.deleteId },
       };
 
@@ -59,11 +55,14 @@ async function userExterior(event, context, callback) {
 
     // for get Data
     const data = await getItemByQuery({
-      table: "realEstate-exterior",
+      table: "realEstate-explore",
       IndexName: "createdBy",
-      KeyConditionExpression: "createdBy = :createdBy",
+      ExpressionAttributeNames: { "#role": "role", "#createdBy": "createdBy" },
+      KeyConditionExpression: "#createdBy = :createdBy",
+      FilterExpression: "#role = :role",
       ExpressionAttributeValues: {
         ":createdBy": params.userId,
+        ":role": params.role,
       },
     });
 
@@ -83,4 +82,4 @@ async function userExterior(event, context, callback) {
   }
 }
 
-exports.userExterior = userExterior;
+exports.userExplore = userExplore;

@@ -10,26 +10,30 @@ import {
   Form,
   Breadcrumb,
 } from "antd";
-import AddExterior from "@/components/AddExterior";
+import AddExplore from "@/components/AddExplore";
 import withAuth from "@/components/common/withAuth";
-import { useAxo } from "../../services/helpers/api";
-import { API } from "../../services/constant";
+import { useAxo } from "@/services/helpers/api";
+import { API, typeDetailExterior, typeDetailRoom } from "@/services/constant";
 import { useAppSelector } from "@/redux/hooks";
 import { putFileToS3, removeFileToS3 } from "@/services/s3Service";
 import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { HomeOutlined, ArrowLeftOutlined } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { capitalizeFirstLetter } from "@/services/helpers";
 
 const iconProps = {
   rev: undefined,
 };
 
-const ExteriorPage = () => {
+const ExplorePage = () => {
   const [form] = Form.useForm();
   const router = useRouter();
   const { user } = useAppSelector((state: any) => state?.userReducer);
+  const searchParams: any = useSearchParams();
+  const role = searchParams.get("role");
+
   const deletePhotes = useRef([]);
 
   const [typeFields, setTypeFields] = useState<any>([]);
@@ -39,19 +43,22 @@ const ExteriorPage = () => {
     id: null,
   });
 
-  const [{ loading, data }, userExteriorPost] = useAxo(
-    "post",
-    API.USER_EXTERIOR
-  );
+  const [{ loading, data }, userExplorePost] = useAxo("post", API.USER_EXPLORE);
 
   useEffect(() => {
-    if (user?.id) {
-      userExteriorPost({ userId: user?.id });
+    if (user?.id && role) {
+      userExplorePost({ userId: user?.id, role });
+    } else if (role === null) {
+      router.push(`/explore?role=room`);
     }
-  }, [user?.id]);
+  }, [user?.id, role]);
 
   const handleAddModalOpen = (id = null) => {
     setIsModalVisible({ id, modal: true });
+
+    if (!id) {
+      form.setFieldsValue({ name: `${role} ${data?.length + 1}` });
+    }
   };
 
   const handleAddModalClose = (reset = false) => {
@@ -69,11 +76,11 @@ const ExteriorPage = () => {
     const deleteimages: any = [];
 
     Object.entries(forImages).forEach(([_, value]: any) => {
-      deleteimages.push(value.ProjectPhotos, value.WarrantyPhotos);
+      deleteimages.push(value.Picture, value.Receipt);
     });
 
     try {
-      await userExteriorPost({ userId: user?.id, deleteId: item?.id });
+      await userExplorePost({ userId: user?.id, deleteId: item?.id, role });
 
       if (!!deleteimages.length) {
         deleteimages?.forEach((t: any) => {
@@ -86,24 +93,37 @@ const ExteriorPage = () => {
   };
 
   const editItem = (item: any) => {
-    const parseData = updateData(JSON.parse(item?.typeField));
+    const parseData =
+      role === "room"
+        ? updateData(JSON.parse(item?.typeField))
+        : updateData2(JSON.parse(item?.typeField));
+
     setTypeFields(
-      Object.keys(parseData)?.map((t: any) => ({
-        title: t,
-        name: t,
+      Object.entries(parseData)?.map(([key, value]: any) => ({
+        name: key,
+        typeDetail: role === "room" ? typeDetailRoom : typeDetailExterior,
       }))
     );
 
-    form.setFieldsValue({ name: item?.name, type: item.type, ...parseData });
+    form.setFieldsValue({
+      name: item?.name,
+      type: item.type,
+      roomLevel: item.roomLevel,
+      ...parseData,
+    });
     handleAddModalOpen(item?.id);
   };
 
   const handleOnFinish = async () => {
     try {
       setLoader(true);
-      const { name, type, ...rest } = await form.validateFields();
+      const { changeName, addFieldName, name, type, roomLevel, ...rest } =
+        await form.validateFields();
 
-      const updatedData = await uploadImages(rest);
+      const updatedData =
+        role === "room"
+          ? await uploadImages(rest, role)
+          : await uploadImages2(rest, role);
 
       if (!!deletePhotes.current.length) {
         deletePhotes.current?.forEach((t: any) => {
@@ -111,15 +131,16 @@ const ExteriorPage = () => {
         });
       }
 
-      const payload = {
+      await userExplorePost({
         id: isModalVisible?.id,
         userId: user.id,
         name,
+        roomLevel,
         type,
+        role,
         typeField: JSON.stringify(updatedData),
-      };
+      });
 
-      await userExteriorPost(payload);
       handleAddModalClose(true);
     } catch (err) {
       console.log("err:", err);
@@ -130,10 +151,19 @@ const ExteriorPage = () => {
 
   const columns: any = [
     {
-      title: "Rooms",
+      title: capitalizeFirstLetter(role),
       dataIndex: "name",
       key: "name",
     },
+    ...(role === "room"
+      ? [
+          {
+            title: "Room Level",
+            dataIndex: "roomLevel",
+            key: "roomLevel",
+          },
+        ]
+      : []),
     {
       title: "Type",
       dataIndex: "type",
@@ -176,7 +206,7 @@ const ExteriorPage = () => {
             ),
           },
           {
-            title: "Exterior",
+            title: capitalizeFirstLetter(role),
           },
         ]}
       />
@@ -193,7 +223,7 @@ const ExteriorPage = () => {
           onClick={() => handleAddModalOpen(null)}
           disabled={loading}
         >
-          Add Exterior
+          {`Add ${capitalizeFirstLetter(role)}`}
         </Button>
       </div>
 
@@ -204,7 +234,11 @@ const ExteriorPage = () => {
       />
 
       <Modal
-        title={!isModalVisible?.id ? "Add Room/Hallway" : "Edit Room/Hallway"}
+        title={
+          !isModalVisible?.id
+            ? `Add ${capitalizeFirstLetter(role)}/Hallway`
+            : `Edit ${capitalizeFirstLetter(role)}/Hallway`
+        }
         open={isModalVisible?.modal}
         className="top-[20px]"
         closable={false}
@@ -227,20 +261,50 @@ const ExteriorPage = () => {
           </Button>,
         ]}
       >
-        <AddExterior
+        <AddExplore
           form={form}
           typeFields={typeFields}
           setTypeFields={setTypeFields}
           deletePhotes={deletePhotes}
+          role={role}
         />
       </Modal>
     </div>
   );
 };
 
-export default withAuth(ExteriorPage);
+export default withAuth(ExplorePage);
 
-const uploadImages = async (data: any) => {
+const uploadImages = async (data: any, role: any) => {
+  const updatedData = { ...data };
+
+  for (const key in updatedData) {
+    if (updatedData.hasOwnProperty(key)) {
+      const picture = updatedData[key].Picture?.[0];
+      const receipt = updatedData[key].Receipt?.[0];
+
+      if (picture?.originFileObj) {
+        const keyPicture = `${role.toUpperCase()}/${uuidv4()}.webp`;
+        updatedData[key].Picture = keyPicture;
+        await putFileToS3(keyPicture, picture.originFileObj);
+      } else {
+        updatedData[key].Picture = picture?.name;
+      }
+
+      if (receipt?.originFileObj) {
+        const keyReceipt = `${role.toUpperCase()}/${uuidv4()}.webp`;
+        updatedData[key].Receipt = keyReceipt;
+        await putFileToS3(keyReceipt, receipt.originFileObj);
+      } else {
+        updatedData[key].Receipt = receipt?.name;
+      }
+    }
+  }
+
+  return updatedData;
+};
+
+const uploadImages2 = async (data: any, role: any) => {
   const updatedData = { ...data };
 
   for (const key in updatedData) {
@@ -258,7 +322,7 @@ const uploadImages = async (data: any) => {
         updatedData[key][type] = [];
         for (const t of clonedPhotos) {
           if (t?.originFileObj) {
-            const keyPicture = `EXTERIOR/${uuidv4()}.webp`;
+            const keyPicture = `${role.toUpperCase()}/${uuidv4()}.webp`;
             updatedData[key][type].push(keyPicture);
             await putFileToS3(keyPicture, t.originFileObj);
           } else {
@@ -279,6 +343,38 @@ const uploadImages = async (data: any) => {
 };
 
 const updateData = (data: any) => {
+  return Object.entries(data).reduce((acc: any, [key, value]: any) => {
+    acc[key] = {
+      ...value,
+      InstallDate: value.InstallDate ? dayjs(value.InstallDate) : undefined,
+
+      Picture: value.Picture
+        ? [
+            {
+              uid: value.Picture,
+              name: `${value.Picture}`,
+              status: "done",
+              url: `https://real-estate-1.s3.us-east-2.amazonaws.com/${value.Picture}`,
+            },
+          ]
+        : undefined,
+
+      Receipt: value.Receipt
+        ? [
+            {
+              uid: value.Receipt,
+              name: `${value.Receipt}`,
+              status: "done",
+              url: `https://real-estate-1.s3.us-east-2.amazonaws.com/${value.Receipt}`,
+            },
+          ]
+        : undefined,
+    };
+    return acc;
+  }, {});
+};
+
+const updateData2 = (data: any) => {
   return Object.entries(data).reduce((acc: any, [key, value]: any) => {
     acc[key] = {
       ...value,

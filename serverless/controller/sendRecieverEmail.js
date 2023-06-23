@@ -12,10 +12,12 @@ async function sendRecieverEmail(event, context, callback) {
     const payload = {
       from: "mohsinghani.777@gmail.com",
       to: "syedrahmeer12@gmail.com",
-      subject: "send email with attachment",
-      // text: 'Hello, this is a send email with attachment',
-
-      html: `<a href="${params?.link}" target="_blank">send email with attachment</a>`,
+      subject: "Real Estate - Proceed with Signup Process",
+      html: `
+      <p>Thank you for choosing our Real Estate platform. We are delighted to have you on board and assist you in your property</p>
+      <p>To continue with the signup process, please follow the steps outlined below:</p>
+      <a href="${params?.link}" target="_blank">Click here to proceed signup process</a>
+      `,
       attachments: [
         {
           filename: "qrcode.png",

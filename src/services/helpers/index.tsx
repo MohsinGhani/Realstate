@@ -59,4 +59,15 @@ const fetchUserData = async (userDetailsPost: any, dispatch: any) => {
   }
 };
 
-export { isTokenExpire, uselocalstorage, getUserId, fetchUserData };
+const capitalizeFirstLetter = (string: any) => {
+  const word = string?.toLowerCase();
+  return word?.charAt(0).toUpperCase() + word?.slice(1);
+};
+
+export {
+  isTokenExpire,
+  uselocalstorage,
+  getUserId,
+  fetchUserData,
+  capitalizeFirstLetter,
+};

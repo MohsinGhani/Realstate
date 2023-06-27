@@ -242,23 +242,31 @@ const AddExplore = ({
   return (
     <div className="overflow-y-auto h-[80vh] pr-[12px]" id="journal-scroll">
       <Form form={form} layout="vertical" requiredMark={false}>
+        {role !== "utilitie" && (
+          <Form.Item label="Type" name="type" rules={[{ required: true }]}>
+            <Select
+              placeholder="Select a Type"
+              onChange={OnTypeChange}
+              options={typeSelectoptions[role]}
+            />
+          </Form.Item>
+        )}
+
         <Form.Item label="Name" name="name" rules={[{ required: true }]}>
           <Input placeholder="Name" />
         </Form.Item>
+
+        {role === "utilitie" && (
+          <Form.Item label="Brand" name="brand" rules={[{ required: true }]}>
+            <Input placeholder="Brand Name" />
+          </Form.Item>
+        )}
 
         {role === "room" && (
           <Form.Item label="Room Level" name="roomLevel">
             <Input placeholder="Room Level" />
           </Form.Item>
         )}
-
-        <Form.Item label="Type" name="type" rules={[{ required: true }]}>
-          <Select
-            placeholder="Select a Type"
-            onChange={OnTypeChange}
-            options={typeSelectoptions[role]}
-          />
-        </Form.Item>
 
         <ExploreDetail
           typeFields={typeFields}

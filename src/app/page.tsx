@@ -15,7 +15,7 @@ import withAuth from "@/components/common/withAuth";
 import { useAppSelector } from "@/redux/hooks";
 import AddHouseImg from "@/components/LandingPage/AddHouseImg";
 import EditUserDetails from "@/components/LandingPage/EditUserDetails";
-import Room from "@/components/LandingPage/Room";
+import Explore from "@/components/LandingPage/Explore";
 
 const HomePage = () => {
   const { user } = useAppSelector((state: any) => state?.userReducer);
@@ -39,18 +39,18 @@ const HomePage = () => {
   const items: any = [
     {
       key: "1",
-      label: `Room`,
-      children: <Room role={"room"} />,
+      label: `Interior`,
+      children: <Explore role={"room"} />,
     },
     {
       key: "2",
       label: `Exterior`,
-      children: <Room role={"exterior"} />,
+      children: <Explore role={"exterior"} />,
     },
     {
       key: "3",
       label: `Utilities`,
-      children: `Utilities`,
+      children: <Explore role={"utilitie"} />,
     },
   ];
 
@@ -96,7 +96,7 @@ const HomePage = () => {
             </Descriptions>
           </Col>
           <Col span={6} xs={{ order: 1, span: 24 }} sm={{ order: 2, span: 6 }}>
-            <div className="flex justify-center flex-col items-center mb-4">
+            <div className="flex justify-center flex-col items-center mb-4 gap-2">
               <QRCode value={link} size={250} />
               <Input maxLength={60} value={link} readOnly />
             </div>

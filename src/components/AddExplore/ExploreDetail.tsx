@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Button,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Space,
-  Upload,
-} from "antd";
+import { Button, DatePicker, Form, Input, Space, Upload } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 const iconProps = {
   rev: undefined,
@@ -43,7 +35,6 @@ const ExploreDetail = ({
 
     switch (type) {
       case "string":
-      case "number":
         return (
           <Form.Item
             name={[key, name]}
@@ -53,14 +44,33 @@ const ExploreDetail = ({
                 required,
               },
               {
-                type,
                 min,
                 max,
               },
             ]}
             className="mb-1"
           >
-            {type === "string" ? <Input /> : <InputNumber />}
+            <Input />
+          </Form.Item>
+        );
+
+      case "textarea":
+        return (
+          <Form.Item
+            name={[key, name]}
+            label={`${key} ${name}`}
+            rules={[
+              {
+                required,
+              },
+              {
+                min,
+                max,
+              },
+            ]}
+            className="mb-1 col-span-2"
+          >
+            <Input.TextArea rows={4} />
           </Form.Item>
         );
 
@@ -114,7 +124,7 @@ const ExploreDetail = ({
         }`}
       >
         <Form.Item name={["changeName", "value"]} className="mb-1">
-          <Input />
+          <Input maxLength={10} />
         </Form.Item>
         <Form.Item name={["changeName", "name"]} className="mb-1">
           <Button shape="round" type="primary" onClick={onChangeName}>

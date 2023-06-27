@@ -116,4 +116,38 @@ const typeDetailExterior = [
     max: 3,
   },
 ];
-export { API, currentEnv, typeDetailRoom, typeDetailExterior };
+
+const typeDetailUtilitie = [
+  {
+    name: "InstallDate",
+    type: "date",
+    required: false,
+  },
+  {
+    name: "Other info",
+    min: 0,
+    max: 5000,
+    type: "textarea",
+    required: false,
+  },
+  {
+    name: "ProjectPhotos",
+    type: "image",
+    required: false,
+    max: 3,
+  },
+  {
+    name: "WarrantyPhotos",
+    type: "image",
+    required: false,
+    max: 3,
+  },
+];
+
+export {
+  API,
+  currentEnv,
+  typeDetailRoom,
+  typeDetailExterior,
+  typeDetailUtilitie,
+};

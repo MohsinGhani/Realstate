@@ -18,6 +18,7 @@ async function userExplore(event, context, callback) {
           name: params.name,
           roomLevel: params.roomLevel,
           role: params.role,
+          brand: params.brand,
           type: params.type,
           typeField: params.typeField,
           createdAt: new Date().getTime(),
@@ -32,6 +33,7 @@ async function userExplore(event, context, callback) {
       const updateValues = {
         name: params.name,
         roomLevel: params.roomLevel,
+        brand: params.brand,
         type: params.type,
         typeField: params.typeField,
       };

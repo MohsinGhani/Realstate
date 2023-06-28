@@ -50,7 +50,7 @@ const HomePage = () => {
     {
       key: "3",
       label: `Utilities`,
-      children: <Explore role={"utilitie"} />,
+      children: <Explore role={"utilities"} />,
     },
   ];
 
@@ -58,7 +58,7 @@ const HomePage = () => {
     <div>
       <div className="mb-4">
         <div className="flex justify-between items-center mb-4">
-          <Title level={3}>User Inforamtion</Title>
+          <Title level={3}>User Information</Title>
           <Button
             onClick={() => {
               showModal({ user: true });

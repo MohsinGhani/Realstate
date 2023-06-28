@@ -38,7 +38,7 @@ const Explore = ({ role }: any) => {
   }, [user?.id, role]);
 
   useEffect(() => {
-    if (role === "utilitie") {
+    if (role === "utilities") {
       setTypeFields([{ name: "Utilitie", typeDetail: typeDetailUtilitie }]);
     }
   }, [role, isModalVisible]);
@@ -180,7 +180,7 @@ const Explore = ({ role }: any) => {
           },
         ]
       : []),
-    ...(role === "utilitie"
+    ...(role === "utilities"
       ? [
           {
             title: "Brand",

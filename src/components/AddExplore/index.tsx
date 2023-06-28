@@ -242,7 +242,7 @@ const AddExplore = ({
   return (
     <div className="overflow-y-auto h-[80vh] pr-[12px]" id="journal-scroll">
       <Form form={form} layout="vertical" requiredMark={false}>
-        {role !== "utilitie" && (
+        {role !== "utilities" && (
           <Form.Item label="Type" name="type" rules={[{ required: true }]}>
             <Select
               placeholder="Select a Type"
@@ -256,7 +256,7 @@ const AddExplore = ({
           <Input placeholder="Name" />
         </Form.Item>
 
-        {role === "utilitie" && (
+        {role === "utilities" && (
           <Form.Item label="Brand" name="brand" rules={[{ required: true }]}>
             <Input placeholder="Brand Name" />
           </Form.Item>
